@@ -27,7 +27,7 @@
   "modernwarpmenu.config.general.hideUnobtainableWarps": "Hide Unobtainable Warps",
   "modernwarpmenu.config.general.hideUnobtainableWarps.tooltip": "Hide warps only obtainable during special game modes such as Bingo",
   "modernwarpmenu.config.general.enableUpdateNotification": "Enable Update Notification",
-  "modernwarpmenu.config.general.enableUpdateNotification.tooltip": "Show a notification on the settings button and in the settings menu when a new version of Fancy Warp Menu is available",
+  "modernwarpmenu.config.general.enableUpdateNotification.tooltip": "Show a notification on the settings button and in the settings menu when a new version of Modern Warp Menu is available",
   "modernwarpmenu.config.general.showRegularWarpMenuButton": "Show Regular Warp Menu Button",
   "modernwarpmenu.config.general.showRegularWarpMenuButton.tooltip": "Show the button to access the regular warp menu",
 
