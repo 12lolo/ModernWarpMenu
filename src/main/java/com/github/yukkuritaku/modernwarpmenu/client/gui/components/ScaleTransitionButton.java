@@ -167,15 +167,6 @@ public class ScaleTransitionButton extends CustomContainerButton{
     }
 
     @Override
-    protected boolean clicked(double mouseX, double mouseY) {
-        return this.active && this.visible &&
-                mouseX >= this.scaledXPosition &&
-                mouseY >= this.scaledYPosition &&
-                mouseX <= this.scaledXPosition + this.scaledWidth &&
-                mouseY <= this.scaledYPosition + this.scaledHeight;
-    }
-
-    @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
         return this.active && this.visible &&
                 mouseX >= this.scaledXPosition &&
