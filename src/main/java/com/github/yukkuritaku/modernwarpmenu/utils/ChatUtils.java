@@ -53,7 +53,9 @@ public class ChatUtils {
     public static void sendMessageWithModNamePrefix(Component message) {
         MutableComponent prefixComponent = createModNamePrefixComponent();
         prefixComponent.append(message);
-        Minecraft.getInstance().player.displayClientMessage(prefixComponent, false);
+        if (Minecraft.getInstance().player != null) {
+            Minecraft.getInstance().player.displayClientMessage(prefixComponent, false);
+        }
     }
 
     /**
@@ -68,7 +70,7 @@ public class ChatUtils {
         Style acronymStyle = Style.EMPTY
                 .withColor(ChatFormatting.LIGHT_PURPLE)
                 .withHoverEvent(
-                        new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal("Modern Warp Menu")));
+                        new HoverEvent.ShowText(Component.literal("Modern Warp Menu")));
 
         return Component.literal("[")
                 .append(Component.literal("MWM").withStyle(acronymStyle))
@@ -95,7 +97,7 @@ public class ChatUtils {
         // setInsertion gives the component a unique identifier for ca.tirelesstraveler.fancywarpmenu.listeners.ChatListener to look for
         Style copyThrowableStyle = Style.EMPTY.withColor(ChatFormatting.BLUE)
                 .withInsertion(messageTranslationKey)
-                .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, ExceptionUtils.getStackTrace(throwable)));
+                .withClickEvent(new ClickEvent.CopyToClipboard(ExceptionUtils.getStackTrace(throwable)));
 
         Component component = createModNamePrefixComponent()
                 .append(Component.translatable(messageTranslationKey).withStyle(messageStyle))

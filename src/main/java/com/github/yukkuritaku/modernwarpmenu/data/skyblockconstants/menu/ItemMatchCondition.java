@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
@@ -105,14 +106,17 @@ public record ItemMatchCondition(int inventorySlot,
             CompoundTag tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 
             if (!StringUtil.isNullOrEmpty(this.skyBlockItemId) || !this.skyBlockItemIdList.isEmpty()) {
-                if (!tag.contains("ExtraAttributes", Tag.TAG_COMPOUND)) {
+                Optional<CompoundTag> extraAttributes = tag.getCompound("ExtraAttributes");
+                if (extraAttributes.isEmpty()) {
                     return false;
                 }
-                CompoundTag extraAttributes = tag.getCompound("ExtraAttributes");
-                String skyBlockId = extraAttributes.contains("id", Tag.TAG_STRING) ?
+                Optional<String> skyBlockId = extraAttributes.get().getString("id");
+                skyBlockItemIDMatches = skyBlockId.isPresent() &&
+                        (skyBlockId.get().equals(this.skyBlockItemId) || this.skyBlockItemIdList.contains(skyBlockId.get()));
+                /*String skyBlockId = extraAttributes.contains("id", Tag.TAG_STRING) ?
                         extraAttributes.getString("id") : null;
                 skyBlockItemIDMatches = skyBlockId != null &&
-                        (skyBlockId.equals(this.skyBlockItemId) || this.skyBlockItemIdList.contains(skyBlockId));
+                        (skyBlockId.equals(this.skyBlockItemId) || this.skyBlockItemIdList.contains(skyBlockId));*/
 
                 if (!skyBlockItemIDMatches) {
                     LOGGER.warn("SkyBlock Item ID mismatch\nExpected {} ; Found {}",
@@ -122,16 +126,16 @@ public record ItemMatchCondition(int inventorySlot,
             }
 
             if (this.loreMatchPattern != EMPTY_PATTERN && !Objects.equals(loreMatchPattern.pattern(), EMPTY_PATTERN.pattern())) {
-                if (!tag.contains("display", Tag.TAG_COMPOUND)) {
+                Optional<CompoundTag> display = tag.getCompound("display");
+                if (display.isEmpty()){
                     return false;
                 }
-                CompoundTag display = tag.getCompound("display");
-                if (display.contains("Lore", Tag.TAG_LIST)) {
-                    ListTag lore = display.getList("Lore", Tag.TAG_STRING);
-                    if (!lore.isEmpty()) {
+                Optional<ListTag> lore = display.get().getList("Lore");
+                if (lore.isPresent()) {
+                    if (!lore.get().isEmpty()) {
                         StringBuilder loreBuilder = new StringBuilder();
-                        for (int i = 0; i < lore.size(); i++) {
-                            loreBuilder.append(lore.getString(i)).append("\n");
+                        for (int i = 0; i < lore.get().size(); i++) {
+                            loreBuilder.append(lore.get().getString(i)).append("\n");
                         }
                         loreBuilder.deleteCharAt(loreBuilder.length() - 1);
                         String loreString = loreBuilder.toString();

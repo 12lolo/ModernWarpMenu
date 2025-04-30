@@ -88,20 +88,19 @@ public class ScaleTransitionButton extends CustomContainerButton{
     protected void renderButtonTexture(GuiGraphics guiGraphics, ResourceLocation texture) {
         PoseStack stack = guiGraphics.pose();
         Matrix4f pose = stack.last().pose();
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
         int color;
         if (this.isHovered){
             color = new Color(HOVERED_BRIGHTNESS, HOVERED_BRIGHTNESS, HOVERED_BRIGHTNESS, 1f).getRGB();
         }else {
             color = new Color(UN_HOVERED_BRIGHTNESS, UN_HOVERED_BRIGHTNESS, UN_HOVERED_BRIGHTNESS, 1f).getRGB();
         }
-        VertexConsumer consumer = Minecraft.getInstance().renderBuffers().bufferSource().getBuffer(RenderType.guiTextured(texture));
-        consumer.addVertex(pose, this.scaledXPosition, this.scaledYPosition + this.scaledHeight, this.getZLevel()).setUv(0, 1).setColor(color);
-        consumer.addVertex(pose, this.scaledXPosition + this.scaledWidth, this.scaledYPosition + this.scaledHeight, this.getZLevel()).setUv(1, 1).setColor(color);
-        consumer.addVertex(pose, this.scaledXPosition + this.scaledWidth, this.scaledYPosition, this.getZLevel()).setUv(1, 0).setColor(color);
-        consumer.addVertex(pose, this.scaledXPosition, this.scaledYPosition, this.getZLevel()).setUv(0, 0).setColor(color);
-        RenderSystem.disableBlend();
+        guiGraphics.drawSpecial(multiBufferSource -> {
+            VertexConsumer consumer = multiBufferSource.getBuffer(RenderType.guiTextured(texture));
+            consumer.addVertex(pose, this.scaledXPosition, this.scaledYPosition + this.scaledHeight, this.getZLevel()).setUv(0, 1).setColor(color);
+            consumer.addVertex(pose, this.scaledXPosition + this.scaledWidth, this.scaledYPosition + this.scaledHeight, this.getZLevel()).setUv(1, 1).setColor(color);
+            consumer.addVertex(pose, this.scaledXPosition + this.scaledWidth, this.scaledYPosition, this.getZLevel()).setUv(1, 0).setColor(color);
+            consumer.addVertex(pose, this.scaledXPosition, this.scaledYPosition, this.getZLevel()).setUv(0, 0).setColor(color);
+        });
     }
 
 
@@ -164,15 +163,6 @@ public class ScaleTransitionButton extends CustomContainerButton{
                 renderBorder(guiGraphics, ARGB.white(1.0f));
             }
         }
-    }
-
-    @Override
-    protected boolean clicked(double mouseX, double mouseY) {
-        return this.active && this.visible &&
-                mouseX >= this.scaledXPosition &&
-                mouseY >= this.scaledYPosition &&
-                mouseX <= this.scaledXPosition + this.scaledWidth &&
-                mouseY <= this.scaledYPosition + this.scaledHeight;
     }
 
     @Override

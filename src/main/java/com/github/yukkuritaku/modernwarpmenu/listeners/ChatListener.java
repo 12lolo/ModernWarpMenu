@@ -15,6 +15,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.font.TextFieldHelper;
 import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 
@@ -44,16 +45,16 @@ public class ChatListener {
         });
         //TODO port throwable copy
 
-        ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
+        /*ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
             if (screen instanceof ChatScreen) {
                 ScreenMouseEvents.allowMouseClick(screen).register((scr, mouseX, mouseY, button) -> {
                     Style style = client.gui.getChat().getClickedComponentStyleAt(mouseX, mouseY);
                     if (style != null){
                         String insertion = style.getInsertion();
-                        if (insertion != null &&
-                                insertion.equals(ChatUtils.COPY_TO_CLIPBOARD_TRANSLATION_KEY) &&
-                        style.getClickEvent() != null){
-                            String clickValue = style.getClickEvent().getValue();
+                        if (insertion != null && insertion.equals(ChatUtils.COPY_TO_CLIPBOARD_TRANSLATION_KEY) && style.getClickEvent() != null
+                                && style.getClickEvent().action() == ClickEvent.Action.COPY_TO_CLIPBOARD){
+                            //String clickValue = style.getClickEvent().action();
+
                             TextFieldHelper.setClipboardContents(client, clickValue);
                             ChatUtils.sendMessageWithModNamePrefix(Component.translatable("modernwarpmenu.gui.buttons.copyToClipboard.copied")
                                     .withStyle(ChatFormatting.GREEN));
@@ -63,7 +64,7 @@ public class ChatListener {
                     return true;
                 });
             }
-        });
+        });*/
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
             if (this.chatMessageSendDetected && client.screen instanceof ChatScreen && screen == null) {
                 this.chatMessageSendDetected = false;

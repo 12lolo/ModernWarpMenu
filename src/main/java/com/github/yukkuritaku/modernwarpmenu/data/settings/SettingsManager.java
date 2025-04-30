@@ -25,7 +25,8 @@ public class SettingsManager {
                     .setJson5(false)
                     .appendGsonBuilder(builder -> builder
                             .setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
-                            .registerTypeHierarchyAdapter(ResourceLocation.class, new ResourceLocation.Serializer()))
+                            //.registerTypeHierarchyAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
+                    )
                     .build())
             .build();
 
