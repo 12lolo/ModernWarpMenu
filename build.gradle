@@ -73,8 +73,8 @@ dependencies {
 	modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 	modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}"
 	modCompileOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
-	modCompileOnly "maven.modrinth:skyblocker-liap:v1.23.0-beta.1+1.21.3"
-	include(modImplementation("me.fallenbreath:conditional-mixin-fabric:0.6.3"))
+	modCompileOnly "maven.modrinth:skyblocker-liap:${project.skyblocker_version}"
+	include(modImplementation("me.fallenbreath:conditional-mixin-fabric:${project.conditional_mixin_version}"))
 
 	
 }
