@@ -43,7 +43,7 @@ public class SkyBlockConstantsManager implements IdentifiableResourceReloadListe
     }
 
     private static void handleLoadException(Resource resource, ResourceLocation location, Exception e) {
-        CrashReport crashReport = new CrashReport("Your Modern Warp Menu resource pack may be outdated", e);
+        CrashReport crashReport = new CrashReport("Your Modern Warp Menu resource pack may be outdated, or something wrong with json", e);
         CrashReportCategory resourceCategory = crashReport.addCategory("Resource");
         CrashReportCategory resourcePackCategory = crashReport.addCategory("Resource Pack");
         resourceCategory.setDetail("Path", location.toString());

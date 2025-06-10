@@ -47,7 +47,7 @@
   "modernwarpmenu.gui.buttons.copyToClipboard.copied": "已复制！",
   "modernwarpmenu.gui.buttons.regularWarpMenu": "默认传送菜单",
 
-  "modernwarpmenu.key.openMenu": "打开传送菜单",
+  "modernwarpmenu.key.openWarpMenu": "打开传送菜单",
 
   "modernwarpmenu.key.categories.modernWarpMenu": "Modern Warp Menu",
 
@@ -63,7 +63,7 @@
   "modernwarpmenu.errors.slotNumberOutOfBounds": "物品栏槽位号无效 (%d)",
   "modernwarpmenu.errors.slotHasNoItem": "物品栏 %d 槽位内无可点击的物品",
   "modernwarpmenu.errors.mouseIsHoldingItem": "鼠标已经持有一个物品",
-  "modernwarpmenu.errors.modernWarpGui.initFailed": "%s 初始化失败",
-  "modernwarpmenu.errors.modernWarpGui.chestInventoryTooSmall": "箱子物品栏容量（%d）小于预期值（%d），界面已回退至原版箱子",
-  "modernwarpmenu.errors.modernWarpGui.itemMatchFailed": "箱子物品匹配检查失败，界面已回退至原版箱子"
+  "modernwarpmenu.errors.modernWarpScreen.initFailed": "%s 初始化失败",
+  "modernwarpmenu.errors.modernWarpScreen.chestInventoryTooSmall": "箱子物品栏容量（%d）小于预期值（%d），界面已回退至原版箱子",
+  "modernwarpmenu.errors.modernWarpScreen.itemMatchFailed": "箱子物品匹配检查失败，界面已回退至原版箱子"
 }

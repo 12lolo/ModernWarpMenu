@@ -7,11 +7,13 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 
 public class ModernWarpMenuDataGenerator implements DataGeneratorEntrypoint {
 	@Override
-	public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
+	public void onInitializeDataGenerator(FabricDataGenerator dataGenerator) {
 
-		FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
-		pack.addProvider((packOutput, future) ->
-				new LayoutProvider(packOutput, ModernWarpMenu.MOD_ID));
+		FabricDataGenerator.Pack pack = dataGenerator.createPack();
+
+
+		pack.addProvider((packOutput, lookupProvider) ->
+				new LayoutProvider(packOutput, ModernWarpMenu.MOD_ID, lookupProvider));
 		pack.addProvider((packOutput, future) ->
 				new SkyBlockConstantsProvider(packOutput, ModernWarpMenu.MOD_ID));
 	}

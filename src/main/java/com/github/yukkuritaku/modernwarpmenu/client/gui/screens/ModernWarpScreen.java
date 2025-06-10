@@ -69,7 +69,7 @@ public class ModernWarpScreen extends CustomContainerScreen{
 
     private RuntimeException guiInitException;
     private Component warpFailMessage;
-    private Component originalTitle;
+    private final Component originalTitle;
     protected long warpFailCoolDownExpiryTime;
     private long warpFailTooltipExpiryTime;
 
@@ -118,7 +118,7 @@ public class ModernWarpScreen extends CustomContainerScreen{
                     ChatUtils.sendMessageWithModNamePrefix("Warning: Chest has correct name but items mismatched");
                 }
             } catch (RuntimeException e) {
-                ChatUtils.sendErrorMessageWithCopyableThrowable("modernwarpmenu.errors.modernWarpGui.itemMatchFailed", e);
+                ChatUtils.sendErrorMessageWithCopyableThrowable("modernwarpmenu.errors.modernWarpScreen.itemMatchFailed", e);
                 setCustomUIState(false, false);
             }finally {
                 // execute is required, because throw ConcurrentModificationException
@@ -245,7 +245,7 @@ public class ModernWarpScreen extends CustomContainerScreen{
                 SettingsManager.save();
                 ChatUtils.sendMessageWithModNamePrefix(Component.translatable(
                         "modernwarpmenu.messages.modernWarpMenuEnabled").withStyle(ChatFormatting.GREEN));
-                if (GameCheckUtils.menuItemsMatch(this.warpMenu, chestInventory)) {
+                if (GameCheckUtils.menuItemsMatch(this.warpMenu, this.chestInventory)) {
                     setCustomUIState(true, true);
                 } else {
                     ModernWarpMenuState.setOpenConfigMenuRequested(true);
@@ -291,7 +291,7 @@ public class ModernWarpScreen extends CustomContainerScreen{
             for (int i = 0; i < lineCount; i++) {
                 if (i == 0) {
                     MultiLineTextWidget widget = new MultiLineTextWidget(labelX, labelY,
-                            Component.translatable("modernwarpmenu.errors.modernWarpGui.initFailed", getClass().getSimpleName()).withStyle(ChatFormatting.RED),
+                            Component.translatable("modernwarpmenu.errors.modernWarpScreen.initFailed", getClass().getSimpleName()).withStyle(ChatFormatting.RED),
                             Minecraft.getInstance().font);
                     widget.setColor(ARGB.white(1.0f));
                     widget.setWidth(this.width);

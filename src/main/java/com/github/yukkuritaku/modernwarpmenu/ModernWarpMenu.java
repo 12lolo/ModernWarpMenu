@@ -12,8 +12,11 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 public class ModernWarpMenu implements ClientModInitializer {
 
@@ -33,6 +36,12 @@ public class ModernWarpMenu implements ClientModInitializer {
 	public void onInitializeClient() {
 		SettingsManager.init();
 		ModernWarpMenuCommand.registerCommands();
+		FabricLoader.getInstance().getModContainer(MOD_ID).ifPresent(modContainer -> {
+			ResourceManagerHelper.registerBuiltinResourcePack(ResourceLocation.fromNamespaceAndPath(MOD_ID, "ultra_wide_layout"),
+					modContainer,
+					Component.literal("21:9 Ultra wide layout pack"),
+					ResourcePackActivationType.NORMAL);
+		});
 		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(this.skyBlockConstantsManager);
 		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(this.layoutManager);
 		new ChatListener().registerEvents();

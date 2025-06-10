@@ -49,7 +49,7 @@
   "modernwarpmenu.gui.buttons.copyToClipboard.copied": "コピーしました!",
   "modernwarpmenu.gui.buttons.regularWarpMenu": "通常のワープ画面",
 
-  "modernwarpmenu.key.openMenu": "Modern Warp Menuを開く",
+  "modernwarpmenu.key.openWarpMenu": "Modern Warp Menuを開く",
 
   "modernwarpmenu.key.categories.modernWarpMenu": "Modern Warp Menu",
 
@@ -65,7 +65,7 @@
   "modernwarpmenu.errors.slotNumberOutOfBounds": "無効なスロット番号です (%d)",
   "modernwarpmenu.errors.slotHasNoItem": "スロット %d にはアイテムが無くてクリックできません",
   "modernwarpmenu.errors.mouseIsHoldingItem": "マウスは既にアイテムを保持しています",
-  "modernwarpmenu.errors.modernWarpGui.initFailed": "%sの初期化に失敗しました",
-  "modernwarpmenu.errors.modernWarpGui.chestInventoryTooSmall": "このチェストのインベントリサイズ (%d) は 想定よりも小さすぎます (%d)、バニラのチェストUIに切り替えます。",
-  "modernwarpmenu.errors.modernWarpGui.itemMatchFailed": "チェストのアイテムチェックに失敗しました、バニラのチェストUIに切り替えます。"
+  "modernwarpmenu.errors.modernWarpScreen.initFailed": "%sの初期化に失敗しました",
+  "modernwarpmenu.errors.modernWarpScreen.chestInventoryTooSmall": "このチェストのインベントリサイズ (%d) は 想定よりも小さすぎます (%d)、バニラのチェストUIに切り替えます。",
+  "modernwarpmenu.errors.modernWarpScreen.itemMatchFailed": "チェストのアイテムチェックに失敗しました、バニラのチェストUIに切り替えます。"
 }

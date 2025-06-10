@@ -4,6 +4,7 @@ import com.github.yukkuritaku.modernwarpmenu.ModernWarpMenu;
 import com.github.yukkuritaku.modernwarpmenu.data.layout.texture.LayoutTexture;
 import com.mojang.serialization.JsonOps;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
@@ -18,12 +19,15 @@ import java.util.concurrent.CompletableFuture;
 public class LayoutProvider implements DataProvider {
 
     private final List<LayoutFile> layouts = Collections.synchronizedList(new LinkedList<>());
+
     private final PackOutput.PathProvider pathProvider;
     private final String modid;
+    private final CompletableFuture<HolderLookup.Provider> lookupProvider;
 
-    public LayoutProvider(FabricDataOutput output, String modid) {
+    public LayoutProvider(FabricDataOutput output, String modid, CompletableFuture<HolderLookup.Provider> lookupProvider) {
         this.pathProvider = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "layouts");
         this.modid = modid;
+        this.lookupProvider = lookupProvider;
     }
 
     public record LayoutFile(Layout layout, String fileName) {
@@ -33,14 +37,13 @@ public class LayoutProvider implements DataProvider {
         return this.pathProvider.json(id);
     }
 
-    private CompletableFuture<?> generateFeatures(CachedOutput cache) {
+    private CompletableFuture<?> generateLayouts(CachedOutput cache) {
         CompletableFuture<?>[] completableFutures = new CompletableFuture<?>[this.layouts.size()];
         int size = 0;
         for (var layout : this.layouts) {
             var target = getPath(ResourceLocation.fromNamespaceAndPath(this.modid, layout.fileName));
             completableFutures[size++] = DataProvider.saveStable(cache, Layout.CODEC.codec().encodeStart(JsonOps.INSTANCE, layout.layout).getOrThrow(), target);
         }
-
         return CompletableFuture.allOf(completableFutures);
     }
 
@@ -188,7 +191,7 @@ public class LayoutProvider implements DataProvider {
     @Override
     public CompletableFuture<?> run(CachedOutput output) {
         this.addLayouts();
-        return CompletableFuture.allOf(generateFeatures(output));
+        return CompletableFuture.allOf(generateLayouts(output));
     }
 
     @Override

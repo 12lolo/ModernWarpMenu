@@ -47,7 +47,7 @@
   "modernwarpmenu.gui.buttons.copyToClipboard.copied": "Copied!",
   "modernwarpmenu.gui.buttons.regularWarpMenu": "Regular Warp Menu",
 
-  "modernwarpmenu.key.openMenu": "Open the Modern Warp Menu",
+  "modernwarpmenu.key.openWarpMenu": "Open the Modern Warp Menu",
 
   "modernwarpmenu.key.categories.modernWarpMenu": "Modern Warp Menu",
 
@@ -63,7 +63,7 @@
   "modernwarpmenu.errors.slotNumberOutOfBounds": "Invalid Slot Number (%d)",
   "modernwarpmenu.errors.slotHasNoItem": "Slot %d Has No Item to Click On",
   "modernwarpmenu.errors.mouseIsHoldingItem": "Mouse is Already Holding an Item",
-  "modernwarpmenu.errors.modernWarpGui.initFailed": "%s Initialization Failed",
-  "modernwarpmenu.errors.modernWarpGui.chestInventoryTooSmall": "Chest inventory size (%d) is smaller than expected (%d), falling back to vanilla chest UI",
-  "modernwarpmenu.errors.modernWarpGui.itemMatchFailed": "Chest item match check failed, falling back to vanilla chest UI"
+  "modernwarpmenu.errors.modernWarpScreen.initFailed": "%s Initialization Failed",
+  "modernwarpmenu.errors.modernWarpScreen.chestInventoryTooSmall": "Chest inventory size (%d) is smaller than expected (%d), falling back to vanilla chest UI",
+  "modernwarpmenu.errors.modernWarpScreen.itemMatchFailed": "Chest item match check failed, falling back to vanilla chest UI"
 }
