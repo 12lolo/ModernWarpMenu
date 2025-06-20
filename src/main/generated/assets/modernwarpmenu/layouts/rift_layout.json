@@ -61,6 +61,12 @@
           "grid_x": 31,
           "grid_y": 28,
           "slot_index": 15
+        },
+        {
+          "display_name": "Mountaintop",
+          "grid_x": 24,
+          "grid_y": 23,
+          "slot_index": 16
         }
       ],
       "width_percentage": 0.35,

@@ -174,7 +174,8 @@ public class LayoutProvider implements DataProvider {
                                         new Warp(18, 11, "Dreadfarm", 12),
                                         new Warp(22, 19, "Plaza", 13),
                                         new Warp(11, 18, "Colosseum", 14),
-                                        new Warp(31, 28, "Stillgore Château", 15)
+                                        new Warp(31, 28, "Stillgore Château", 15),
+                                        new Warp(24, 23, "Mountaintop", 16)
                                 ))
                 ),
                 new WarpIcon(new LayoutTexture(ResourceLocation.fromNamespaceAndPath(

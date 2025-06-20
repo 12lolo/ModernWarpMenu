@@ -2,6 +2,7 @@ package com.github.yukkuritaku.modernwarpmenu.mixin.compat.skyblocker;
 
 import com.github.yukkuritaku.modernwarpmenu.client.gui.screens.ModernWarpScreen;
 import com.github.yukkuritaku.modernwarpmenu.data.settings.SettingsManager;
+import com.github.yukkuritaku.modernwarpmenu.data.skyblockconstants.menu.Menu;
 import de.hysky.skyblocker.skyblock.ChestValue;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
@@ -10,6 +11,7 @@ import net.minecraft.client.gui.screens.Screen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Restriction(require = {
@@ -18,6 +20,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ChestValue.class)
 public class ChestValueMixin {
 
+    @Redirect(method = "lambda$init$3", at = @At(value = "INVOKE", target = "Ljava/lang/String;equals(Ljava/lang/Object;)Z"))
+    private static boolean onInit2(String instance, Object o){
+        return !instance.equals(o) || !instance.equals(Menu.FAST_TRAVEL.getDisplayName()) || !instance.equals(Menu.PORHTAL.getDisplayName());
+    }
     @Inject(method = "lambda$init$3", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z"), cancellable = true)
     private static void onInit(Minecraft client, Screen screen, int scaledWidth, int scaledHeight, CallbackInfo ci){
         if (screen instanceof ModernWarpScreen && SettingsManager.get().general.warpMenuEnabled){

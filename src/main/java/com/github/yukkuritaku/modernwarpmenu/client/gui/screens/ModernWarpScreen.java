@@ -308,6 +308,7 @@ public class ModernWarpScreen extends CustomContainerScreen{
                     this.addRenderableOnly(widget);
                 }
                 labelY = labelY + ySpacing;
+
             }
             this.addRenderableWidget(new TimedMessageButton(this.width / 2 - 100, labelY + ySpacing,
                     Component.translatable("modernwarpmenu.gui.buttons.copyToClipboard"),
@@ -316,6 +317,7 @@ public class ModernWarpScreen extends CustomContainerScreen{
                         ((TimedMessageButton) button).setTimedMessage(
                                 Component.translatable("modernwarpmenu.gui.buttons.copyToClipboard.copied"), 1500);
                     }, Supplier::get));
+            LOGGER.error("Errored!", e);
         }
     }
 
@@ -498,8 +500,8 @@ public class ModernWarpScreen extends CustomContainerScreen{
                 return true;
             }
         }
-/*
-        FocusNavigationEvent navigationEvent = switch (keyCode) {
+
+        /*FocusNavigationEvent navigationEvent = switch (keyCode) {
             case InputConstants.KEY_TAB -> this.createTabEvent();
             case InputConstants.KEY_RIGHT -> this.createArrowEvent(ScreenDirection.RIGHT);
             case InputConstants.KEY_LEFT -> this.createArrowEvent(ScreenDirection.LEFT);
@@ -534,7 +536,6 @@ public class ModernWarpScreen extends CustomContainerScreen{
         }
         return true;
     }
-
 
     /**
      * A callback called when any item in the chest it is attached to changes
