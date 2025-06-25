@@ -3,7 +3,8 @@ package com.github.yukkuritaku.modernwarpmenu.client.resources;
 import com.github.yukkuritaku.modernwarpmenu.ModernWarpMenu;
 import com.github.yukkuritaku.modernwarpmenu.data.skyblockconstants.SkyBlockConstants;
 import com.github.yukkuritaku.modernwarpmenu.data.skyblockconstants.WarpMessages;
-import com.github.yukkuritaku.modernwarpmenu.data.skyblockconstants.menu.ItemMatchCondition;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -17,14 +18,10 @@ import net.minecraft.ReportedException;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
@@ -59,9 +56,9 @@ public class SkyBlockConstantsManager implements IdentifiableResourceReloadListe
             handleLoadException(resource, SKY_BLOCK_CONSTANTS_LOCATION, e);
         }
         return new SkyBlockConstants(
-                Map.of(),
-                new WarpMessages(List.of(), Map.of()),
-                List.of(),
+                Maps.newHashMap(),
+                new WarpMessages(Lists.newArrayList(), Maps.newHashMap()),
+                Lists.newArrayList(),
                 "");
     }
 
@@ -73,16 +70,17 @@ public class SkyBlockConstantsManager implements IdentifiableResourceReloadListe
             LOGGER.warn("Unable to load SkyBlockConstants", e);
         }
         return CompletableFuture.supplyAsync(() -> new SkyBlockConstants(
-                Map.of(),
-                new WarpMessages(List.of(), Map.of()),
-                List.of(),
+                Maps.newHashMap(),
+                new WarpMessages(Lists.newArrayList(), Maps.newHashMap()),
+                Lists.newArrayList(),
                 ""));
     }
 
     protected void apply(SkyBlockConstants object) {
+        // TODO commented out because sorting causes unsupported error because list is immutable, maybe fixable?
         /*for (var list : object.menuMatchingMap().values()) {
-            LOGGER.info("class: {}", list.getClass().getSimpleName());
-            //list.sort(Comparator.comparing(ItemMatchCondition::inventorySlot));
+            LOGGER.info("List: {}", list);
+            list.sort(Comparator.comparing(ItemMatchCondition::inventorySlot));
         }*/
         this.skyBlockConstants = object;
     }
