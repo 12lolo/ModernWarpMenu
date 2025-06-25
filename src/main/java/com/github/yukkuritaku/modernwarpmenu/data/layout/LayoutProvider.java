@@ -108,7 +108,8 @@ public class LayoutProvider implements DataProvider {
                                 List.of(
                                         new Warp(5, 21, "Spawn", "deep"),
                                         new Warp(32, 12, "Dwarven\nMines", "dwarves"),
-                                        new Warp(17, 5, "Forge", "forge"),
+                                        new Warp(20, 5, "Forge", "forge"),
+                                        new Warp(8, 12, "Tunnels", "tunnels"),
                                         new Warp(31, 26, "Hollows", "ch"),
                                         new Warp(18, 30, "Nucleus", "nucleus")
                                 )),

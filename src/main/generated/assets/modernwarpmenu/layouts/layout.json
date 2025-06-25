@@ -259,8 +259,14 @@
         {
           "command_name": "forge",
           "display_name": "Forge",
-          "grid_x": 17,
+          "grid_x": 20,
           "grid_y": 5
+        },
+        {
+          "command_name": "tunnels",
+          "display_name": "Tunnels",
+          "grid_x": 8,
+          "grid_y": 12
         },
         {
           "command_name": "ch",
