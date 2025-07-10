@@ -15,7 +15,8 @@ Supported version: 1.21.5
 
 - Custom Layout format
   - This means can't be use Fancy warp menu resource packs 
-  - Diff previews are currently wip (Maybe I'll write in later)
+  - Diff previews are [here](docs/fwm_to_mwm_migration_guide.md)
+    - (Resource pack template is currently not created)
 
 ## Screenshots
 
