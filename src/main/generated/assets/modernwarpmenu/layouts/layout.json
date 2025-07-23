@@ -67,7 +67,7 @@
       "z_level": 0
     },
     {
-      "grid_x": 24,
+      "grid_x": 18,
       "grid_y": 1,
       "hover_effect_texture": {
         "height": 656,
@@ -127,7 +127,7 @@
           ]
         }
       ],
-      "width_percentage": 0.2,
+      "width_percentage": 0.25,
       "z_level": 2
     },
     {
@@ -205,7 +205,7 @@
       "z_level": 2
     },
     {
-      "grid_x": 36,
+      "grid_x": 32,
       "grid_y": 9,
       "hover_effect_texture": {
         "height": 493,
@@ -230,7 +230,7 @@
       "z_level": 1
     },
     {
-      "grid_x": 43,
+      "grid_x": 39,
       "grid_y": 2,
       "hover_effect_texture": {
         "height": 509,
@@ -281,7 +281,7 @@
           "grid_y": 30
         }
       ],
-      "width_percentage": 0.1,
+      "width_percentage": 0.135,
       "z_level": 2
     },
     {

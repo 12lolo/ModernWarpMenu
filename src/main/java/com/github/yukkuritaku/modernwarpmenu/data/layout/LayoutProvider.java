@@ -67,7 +67,7 @@ public class LayoutProvider implements DataProvider {
                         new Island("Crimson Isle",
                                 new LayoutTexture(ResourceLocation.fromNamespaceAndPath(ModernWarpMenu.MOD_ID,
                                         "textures/gui/islands/crimson_isle.png"), 926, 656),
-                                24, 1, 2, 0.2f,
+                                18, 1, 2, 0.25f,
                                 List.of(
                                         new Warp(4, 30, "Spawn", "isle"),
                                         new Warp(22, 8, "Skull", "skull"),
@@ -98,13 +98,13 @@ public class LayoutProvider implements DataProvider {
                         new Island("Gold Mine",
                                 new LayoutTexture(ResourceLocation.fromNamespaceAndPath(ModernWarpMenu.MOD_ID,
                                         "textures/gui/islands/gold_mine.png"), 464, 493),
-                                36, 9, 1, 0.1f,
+                                32, 9, 1, 0.1f,
                                 List.of(new Warp(8, 20, "Spawn", "gold"))
                         ),
                         new Island("Deep Caverns",
                                 new LayoutTexture(ResourceLocation.fromNamespaceAndPath(ModernWarpMenu.MOD_ID,
                                         "textures/gui/islands/deep_caverns.png"), 397, 509),
-                                43, 2, 2, 0.1f,
+                                39, 2, 2, 0.135f,
                                 List.of(
                                         new Warp(5, 21, "Spawn", "deep"),
                                         new Warp(32, 12, "Dwarven\nMines", "dwarves"),
