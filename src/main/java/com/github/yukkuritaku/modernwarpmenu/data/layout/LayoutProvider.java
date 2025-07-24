@@ -150,7 +150,7 @@ public class LayoutProvider implements DataProvider {
                                 List.of(new Warp(5, 3, "Spawn", "bayou"))),
                         new Island("Jerry's Workshop", new LayoutTexture(ResourceLocation.fromNamespaceAndPath(ModernWarpMenu.MOD_ID,
                                 "textures/gui/islands/jerrys_workshop.png"), 890, 602),
-                                13, 2, 2, 0.15f,
+                                2, 28, 2, 0.15f,
                                 List.of(new Warp(22, 16, "Jerry", "jerry",
                                         List.of("jerry")))),
                         new Island("Dungeon Hub", new LayoutTexture(ResourceLocation.fromNamespaceAndPath(ModernWarpMenu.MOD_ID,

@@ -484,8 +484,8 @@
       "z_level": 0
     },
     {
-      "grid_x": 13,
-      "grid_y": 2,
+      "grid_x": 2,
+      "grid_y": 28,
       "hover_effect_texture": {
         "height": 602,
         "location": "modernwarpmenu:textures/gui/islands/jerrys_workshop.png",
