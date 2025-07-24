@@ -185,20 +185,20 @@
         {
           "command_name": "end",
           "display_name": "Spawn",
-          "grid_x": 26,
-          "grid_y": 20
+          "grid_x": 27,
+          "grid_y": 18
         },
         {
           "command_name": "drag",
           "display_name": "Nest",
           "grid_x": 11,
-          "grid_y": 32
+          "grid_y": 30
         },
         {
           "command_name": "void",
           "display_name": "Void",
           "grid_x": 24,
-          "grid_y": 30
+          "grid_y": 28
         }
       ],
       "width_percentage": 0.15,
