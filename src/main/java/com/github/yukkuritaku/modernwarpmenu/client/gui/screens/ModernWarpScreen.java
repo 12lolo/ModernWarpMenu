@@ -26,6 +26,8 @@ import net.minecraft.client.gui.components.MultiLineTextWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.font.TextFieldHelper;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.Container;
@@ -35,6 +37,7 @@ import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.joml.Matrix3x2fStack;
 import org.slf4j.Logger;
 
 import java.awt.*;
@@ -136,12 +139,12 @@ public class ModernWarpScreen extends CustomContainerScreen{
     public void drawExceptionScreen(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         // Labels are under the background for some reason
-        guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(0, 0, 1);
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().translate(0, 0);
         for (Renderable renderable : ((ScreenAccessor)this).getRenderables()){
             renderable.render(guiGraphics, mouseX, mouseY, partialTick);
         }
-        guiGraphics.pose().popPose();
+        guiGraphics.pose().popMatrix();
         for (GuiEventListener listener : this.children()){
             ((Button)listener).render(guiGraphics, mouseX, mouseY, partialTick);
         }
@@ -214,12 +217,21 @@ public class ModernWarpScreen extends CustomContainerScreen{
                                     int zLevel) {
         debugStrings.add(Component.literal("gridX: " + nearestGridX));
         debugStrings.add(Component.literal("gridY: " + nearestGridY));
-        // zLevel of -1 means z is not relevant, like in the case of screen coordinates
         if (zLevel > -1) {
             debugStrings.add(Component.literal("zLevel: " + zLevel));
         }
-        guiGraphics.renderTooltip(Minecraft.getInstance().font, debugStrings,
-                Optional.empty(), drawX, drawY);
+        // Convert to ClientTooltipComponent
+        List<ClientTooltipComponent> tooltipComponents = debugStrings.stream()
+                .map(c -> ClientTooltipComponent.create(c.getVisualOrderText()))
+                .toList();
+        guiGraphics.renderTooltip(
+                Minecraft.getInstance().font,
+                tooltipComponents,
+                drawX,
+                drawY,
+                DefaultTooltipPositioner.INSTANCE,
+                null
+        );
         guiGraphics.fill(drawX - 2, drawY - 2, drawX + 2, drawY + 2, Color.RED.getRGB());
     }
 
@@ -416,7 +428,17 @@ public class ModernWarpScreen extends CustomContainerScreen{
         renderButtons(guiGraphics, mouseX, mouseY, partialTick);
         // Draw warp fail tooltip
         if (Util.getMillis() <= warpFailTooltipExpiryTime && warpFailMessage != null) {
-            guiGraphics.renderTooltip(Minecraft.getInstance().font, this.warpFailMessage, mouseX, mouseY);
+            List<ClientTooltipComponent> tooltipComponents = List.of(
+                    ClientTooltipComponent.create(warpFailMessage.getVisualOrderText())
+            );
+            guiGraphics.renderTooltip(
+                    Minecraft.getInstance().font,
+                    tooltipComponents,
+                    mouseX,
+                    mouseY,
+                    DefaultTooltipPositioner.INSTANCE,
+                    null
+            );
         }
 
         if (SettingsManager.get().debug.debugModeEnabled && SettingsManager.get().debug.showDebugOverlay) {
@@ -426,8 +448,8 @@ public class ModernWarpScreen extends CustomContainerScreen{
             int nearestX;
             int nearestY;
             boolean tooltipDrawn = false;
-            guiGraphics.pose().pushPose();
-            guiGraphics.pose().translate(0, 0, 20);
+            guiGraphics.pose().pushMatrix();
+            guiGraphics.pose().translate(0, 0);
             // Draw screen resolution
             guiGraphics.drawCenteredString(Minecraft.getInstance().font,
                     String.format("%d x %d (%d)",
@@ -465,7 +487,7 @@ public class ModernWarpScreen extends CustomContainerScreen{
                 drawY = (int) this.grid.getActualY(nearestY);
                 renderDebugStrings(guiGraphics, debugMessages, drawX, drawY, nearestX, nearestY, -1);
             }
-            guiGraphics.pose().popPose();
+            guiGraphics.pose().popMatrix();
         }
     }
 

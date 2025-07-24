@@ -14,6 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
+import org.joml.Matrix3x2fStack;
 import org.joml.Matrix4f;
 
 import java.awt.*;
@@ -39,7 +40,7 @@ public class ScaleTransitionButton extends CustomContainerButton{
      */
     public void calculateHoverState(int mouseX, int mouseY) {
         this.isHovered =
-                        mouseX >= this.scaledXPosition &&
+                mouseX >= this.scaledXPosition &&
                         mouseY >= this.scaledYPosition &&
                         mouseX <= this.scaledXPosition + this.scaledWidth &&
                         mouseY <= this.scaledYPosition + this.scaledHeight;
@@ -70,15 +71,15 @@ public class ScaleTransitionButton extends CustomContainerButton{
      *
      * @param color color of the border
      */
-    public void renderBorder(GuiGraphics guiGraphics, int color){
-        PoseStack stack = guiGraphics.pose();
-        stack.pushPose();
-        stack.translate(0, 0, this.getZLevel());
+    public void renderBorder(GuiGraphics guiGraphics, int color) {
+        Matrix3x2fStack stack = guiGraphics.pose();
+        stack.pushMatrix();
+        stack.translate(0, 0); // z is ignored in 2D
         guiGraphics.hLine((int) this.scaledXPosition, (int) (this.scaledXPosition + this.scaledWidth), (int) this.scaledYPosition, color);
         guiGraphics.vLine((int) this.scaledXPosition, (int) this.scaledYPosition, (int) (this.scaledYPosition + this.scaledHeight), color);
         guiGraphics.hLine((int) this.scaledXPosition, (int) (this.scaledXPosition + this.scaledWidth), (int) (this.scaledYPosition + this.scaledHeight), color);
         guiGraphics.vLine((int) (this.scaledXPosition + this.scaledWidth), (int) this.scaledYPosition, (int) (this.scaledYPosition + this.scaledHeight), color);
-        stack.popPose();
+        stack.popMatrix();
     }
     /**
      * Draws the provided texture at ({@code this.scaledXPosition}, {@code this.scaledYPosition}, {@code this.zLevel}) at a size of ({@code this.scaledWidth})x({@code this.scaledHeight})
@@ -86,21 +87,25 @@ public class ScaleTransitionButton extends CustomContainerButton{
      * @param texture location of texture to draw
      */
     protected void renderButtonTexture(GuiGraphics guiGraphics, ResourceLocation texture) {
-        PoseStack stack = guiGraphics.pose();
-        Matrix4f pose = stack.last().pose();
         int color;
-        if (this.isHovered){
+        if (this.isHovered) {
             color = new Color(HOVERED_BRIGHTNESS, HOVERED_BRIGHTNESS, HOVERED_BRIGHTNESS, 1f).getRGB();
-        }else {
+        } else {
             color = new Color(UN_HOVERED_BRIGHTNESS, UN_HOVERED_BRIGHTNESS, UN_HOVERED_BRIGHTNESS, 1f).getRGB();
         }
-        guiGraphics.drawSpecial(multiBufferSource -> {
-            VertexConsumer consumer = multiBufferSource.getBuffer(RenderType.guiTextured(texture));
-            consumer.addVertex(pose, this.scaledXPosition, this.scaledYPosition + this.scaledHeight, this.getZLevel()).setUv(0, 1).setColor(color);
-            consumer.addVertex(pose, this.scaledXPosition + this.scaledWidth, this.scaledYPosition + this.scaledHeight, this.getZLevel()).setUv(1, 1).setColor(color);
-            consumer.addVertex(pose, this.scaledXPosition + this.scaledWidth, this.scaledYPosition, this.getZLevel()).setUv(1, 0).setColor(color);
-            consumer.addVertex(pose, this.scaledXPosition, this.scaledYPosition, this.getZLevel()).setUv(0, 0).setColor(color);
-        });
+        // Draw the texture using the new pipeline
+        guiGraphics.blit(
+                net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED,
+                texture,
+                (int) this.scaledXPosition,
+                (int) this.scaledYPosition,
+                0.0F, 0.0F, // u, v
+                (int) this.scaledWidth,
+                (int) this.scaledHeight,
+                (int) this.scaledWidth,
+                (int) this.scaledHeight,
+                color
+        );
     }
 
 
@@ -115,7 +120,7 @@ public class ScaleTransitionButton extends CustomContainerButton{
     public void renderMessageString(GuiGraphics guiGraphics, float xOffset, float yOffset, Color textColor) {
 
         String[] lines = this.getMessage().getString().split("\n");
-        PoseStack stack = guiGraphics.pose();
+        Matrix3x2fStack stack = guiGraphics.pose();
         Color color;
         if (this.isHovered){
             color = new Color((int) (textColor.getRed() * HOVERED_BRIGHTNESS),
@@ -127,13 +132,13 @@ public class ScaleTransitionButton extends CustomContainerButton{
                     (int) (textColor.getGreen() * UN_HOVERED_BRIGHTNESS),
                     (int) (textColor.getBlue() * UN_HOVERED_BRIGHTNESS), 255);
         }
-        stack.pushPose();
-        stack.translate(this.scaledXPosition + xOffset, this.scaledYPosition + yOffset, this.getZLevel() + 1);
-        stack.scale(this.transition.getCurrentScale(), this.transition.getCurrentScale(), 1);
+        stack.pushMatrix();
+        stack.translate(this.scaledXPosition + xOffset, this.scaledYPosition + yOffset);
+        stack.scale(this.transition.getCurrentScale(), this.transition.getCurrentScale());
         for (int i = 0; i < lines.length; i++) {
             guiGraphics.drawCenteredString(Minecraft.getInstance().font, lines[i], 0, Minecraft.getInstance().font.lineHeight * i, color.getRGB());
         }
-        stack.popPose();
+        stack.popMatrix();
     }
 
     protected void renderForegroundLayer(GuiGraphics guiGraphics, ResourceLocation foregroundTexture){
@@ -146,7 +151,14 @@ public class ScaleTransitionButton extends CustomContainerButton{
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (this.visible) {
             this.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
-            this.tooltip.refreshTooltipForNextRenderPass(this.isHovered(), this.isFocused(), this.getRectangle());
+            this.tooltip.refreshTooltipForNextRenderPass(
+                    guiGraphics,
+                    mouseX,
+                    mouseY,
+                    this.isHovered(),
+                    this.isFocused(),
+                    this.getRectangle()
+            );
         }
     }
 
