@@ -37,13 +37,11 @@ import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.joml.Matrix3x2fStack;
 import org.slf4j.Logger;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
