@@ -8,11 +8,11 @@
       "location": "modernwarpmenu:icon.png",
       "width": 512
     },
-    "width_percentage": 0.05
+    "width_percentage": 0.03
   },
   "island_list": [
     {
-      "grid_x": 21,
+      "grid_x": 24,
       "grid_y": 17,
       "hover_effect_texture": {
         "height": 674,
@@ -63,11 +63,11 @@
           "grid_y": 22
         }
       ],
-      "width_percentage": 0.35,
+      "width_percentage": 0.25,
       "z_level": 0
     },
     {
-      "grid_x": 22,
+      "grid_x": 18,
       "grid_y": 1,
       "hover_effect_texture": {
         "height": 656,
@@ -131,7 +131,7 @@
       "z_level": 2
     },
     {
-      "grid_x": 12,
+      "grid_x": 14,
       "grid_y": 12,
       "hover_effect_texture": {
         "height": 522,
@@ -164,12 +164,12 @@
           "grid_y": 16
         }
       ],
-      "width_percentage": 0.175,
+      "width_percentage": 0.15,
       "z_level": 1
     },
     {
-      "grid_x": 1,
-      "grid_y": 1,
+      "grid_x": 2,
+      "grid_y": 2,
       "hover_effect_texture": {
         "height": 667,
         "location": "modernwarpmenu:textures/gui/islands/end.png",
@@ -201,11 +201,11 @@
           "grid_y": 30
         }
       ],
-      "width_percentage": 0.2,
+      "width_percentage": 0.15,
       "z_level": 2
     },
     {
-      "grid_x": 36,
+      "grid_x": 32,
       "grid_y": 9,
       "hover_effect_texture": {
         "height": 493,
@@ -230,7 +230,7 @@
       "z_level": 1
     },
     {
-      "grid_x": 41,
+      "grid_x": 39,
       "grid_y": 2,
       "hover_effect_texture": {
         "height": 509,
@@ -281,11 +281,11 @@
           "grid_y": 30
         }
       ],
-      "width_percentage": 0.12,
+      "width_percentage": 0.135,
       "z_level": 2
     },
     {
-      "grid_x": 45,
+      "grid_x": 43,
       "grid_y": 27,
       "hover_effect_texture": {
         "height": 488,
@@ -310,7 +310,7 @@
       "z_level": 1
     },
     {
-      "grid_x": 50,
+      "grid_x": 48,
       "grid_y": 27,
       "hover_effect_texture": {
         "height": 569,
@@ -335,8 +335,8 @@
       "z_level": 2
     },
     {
-      "grid_x": 43,
-      "grid_y": 15,
+      "grid_x": 41,
+      "grid_y": 16,
       "hover_effect_texture": {
         "height": 1080,
         "location": "modernwarpmenu:textures/gui/islands/barn.png",
@@ -361,7 +361,7 @@
     },
     {
       "grid_x": 50,
-      "grid_y": 7,
+      "grid_y": 2,
       "hover_effect_texture": {
         "height": 604,
         "location": "modernwarpmenu:textures/gui/islands/mushroom_desert.png",
@@ -387,49 +387,105 @@
           "grid_y": 8
         }
       ],
-      "width_percentage": 0.2,
+      "width_percentage": 0.15,
       "z_level": 2
     },
     {
-      "grid_x": 10,
+      "grid_x": 12,
       "grid_y": 22,
       "hover_effect_texture": {
-        "height": 560,
+        "height": 1028,
         "location": "modernwarpmenu:textures/gui/islands/park.png",
-        "width": 537
+        "width": 1371
       },
       "name": "The Park",
       "texture": {
-        "height": 560,
+        "height": 1028,
         "location": "modernwarpmenu:textures/gui/islands/park.png",
-        "width": 537
+        "width": 1371
       },
       "warp_list": [
         {
           "command_name": "park",
           "display_name": "Spawn",
-          "grid_x": 25,
-          "grid_y": 30
+          "grid_x": 34,
+          "grid_y": 32
         },
         {
           "command_name": "howl",
           "display_name": "Cave",
-          "grid_x": 30,
-          "grid_y": 16
+          "grid_x": 28,
+          "grid_y": 14
         },
         {
           "command_name": "jungle",
           "display_name": "Jungle",
-          "grid_x": 19,
-          "grid_y": 4
+          "grid_x": 16,
+          "grid_y": 6
         }
       ],
       "width_percentage": 0.15,
       "z_level": 0
     },
     {
-      "grid_x": 2,
+      "grid_x": 1,
+      "grid_y": 18,
+      "hover_effect_texture": {
+        "height": 871,
+        "location": "modernwarpmenu:textures/gui/islands/galatea.png",
+        "width": 1129
+      },
+      "name": "Galetea",
+      "texture": {
+        "height": 871,
+        "location": "modernwarpmenu:textures/gui/islands/galatea.png",
+        "width": 1129
+      },
+      "warp_list": [
+        {
+          "command_name": "galatea",
+          "display_name": "Spawn",
+          "grid_x": 13,
+          "grid_y": 28
+        },
+        {
+          "command_name": "murkwater",
+          "display_name": "Murkwater",
+          "grid_x": 22,
+          "grid_y": 15
+        }
+      ],
+      "width_percentage": 0.15,
+      "z_level": 0
+    },
+    {
+      "grid_x": 51,
       "grid_y": 16,
+      "hover_effect_texture": {
+        "height": 875,
+        "location": "modernwarpmenu:textures/gui/islands/bayou.png",
+        "width": 951
+      },
+      "name": "Bayou",
+      "texture": {
+        "height": 875,
+        "location": "modernwarpmenu:textures/gui/islands/bayou.png",
+        "width": 951
+      },
+      "warp_list": [
+        {
+          "command_name": "bayou",
+          "display_name": "Spawn",
+          "grid_x": 5,
+          "grid_y": 3
+        }
+      ],
+      "width_percentage": 0.1,
+      "z_level": 0
+    },
+    {
+      "grid_x": 13,
+      "grid_y": 2,
       "hover_effect_texture": {
         "height": 602,
         "location": "modernwarpmenu:textures/gui/islands/jerrys_workshop.png",
@@ -456,7 +512,7 @@
       "z_level": 2
     },
     {
-      "grid_x": 4,
+      "grid_x": 56,
       "grid_y": 26,
       "hover_effect_texture": {
         "height": 512,
@@ -489,7 +545,7 @@
       "location": "modernwarpmenu:textures/gui/regular_warp_menu.png",
       "width": 128
     },
-    "width_percentage": 0.05
+    "width_percentage": 0.03
   },
   "warp_icon": {
     "hover_effect_texture": {
