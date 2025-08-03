@@ -1,5 +1,6 @@
 package com.github.yukkuritaku.modernwarpmenu.client.gui.components;
 
+import com.github.yukkuritaku.modernwarpmenu.client.gui.BlitExtension;
 import com.github.yukkuritaku.modernwarpmenu.client.gui.screens.grid.GridRectangle;
 import com.github.yukkuritaku.modernwarpmenu.client.gui.screens.transition.ScaleTransition;
 import com.github.yukkuritaku.modernwarpmenu.data.layout.texture.LayoutTexture;
@@ -87,17 +88,18 @@ public class ScaleTransitionButton extends CustomContainerButton{
         } else {
             color = new Color(UN_HOVERED_BRIGHTNESS, UN_HOVERED_BRIGHTNESS, UN_HOVERED_BRIGHTNESS, 1f).getRGB();
         }
+
         // Draw the texture using the new pipeline
-        guiGraphics.blit(
+        BlitExtension.blit(guiGraphics,
                 net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED,
                 texture,
-                (int) this.scaledXPosition,
-                (int) this.scaledYPosition,
+                this.scaledXPosition,
+                this.scaledYPosition,
                 0.0F, 0.0F, // u, v
-                (int) this.scaledWidth,
-                (int) this.scaledHeight,
-                (int) this.scaledWidth,
-                (int) this.scaledHeight,
+                this.scaledWidth,
+                this.scaledHeight,
+                this.scaledWidth,
+                this.scaledHeight,
                 color
         );
     }

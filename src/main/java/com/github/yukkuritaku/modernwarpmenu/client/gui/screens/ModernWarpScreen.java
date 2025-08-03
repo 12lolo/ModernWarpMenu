@@ -423,12 +423,16 @@ public class ModernWarpScreen extends CustomContainerScreen{
         for (int i = 0; i < hoveredButtons.size() - 1; i++) {
             hoveredButtons.get(i).setHovered(false);
         }
+        //TODO search stratum is needed or not
+        guiGraphics.nextStratum();
         renderButtons(guiGraphics, mouseX, mouseY, partialTick);
         // Draw warp fail tooltip
         if (Util.getMillis() <= warpFailTooltipExpiryTime && warpFailMessage != null) {
             List<ClientTooltipComponent> tooltipComponents = List.of(
                     ClientTooltipComponent.create(warpFailMessage.getVisualOrderText())
             );
+            //TODO search stratum is needed or not
+            guiGraphics.nextStratum();
             guiGraphics.renderTooltip(
                     Minecraft.getInstance().font,
                     tooltipComponents,

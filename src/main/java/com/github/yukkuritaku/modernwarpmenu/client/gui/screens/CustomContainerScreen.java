@@ -100,7 +100,7 @@ public abstract class CustomContainerScreen extends ContainerScreen {
                 renderMenuBackgroundTexture(guiGraphics, this.backgroundTextureLocation,
                         0, 0,
                         0.0f, 0.0f,
-                        window.getGuiScaledWidth(), window.getGuiScaledHeight());
+                        guiGraphics.guiWidth(), guiGraphics.guiHeight());
             }else {
                 this.renderTransparentBackground(guiGraphics);
             }
