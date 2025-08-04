@@ -222,6 +222,7 @@ public class ModernWarpScreen extends CustomContainerScreen{
         List<ClientTooltipComponent> tooltipComponents = debugStrings.stream()
                 .map(c -> ClientTooltipComponent.create(c.getVisualOrderText()))
                 .toList();
+        guiGraphics.nextStratum();
         guiGraphics.renderTooltip(
                 Minecraft.getInstance().font,
                 tooltipComponents,
@@ -457,12 +458,12 @@ public class ModernWarpScreen extends CustomContainerScreen{
                             this.window.getGuiScaledWidth(), this.window.getGuiScaledHeight(),
                             this.window.calculateScale(Minecraft.getInstance().options.guiScale().get(),
                                     Minecraft.getInstance().isEnforceUnicode())),
-                    this.width / 2, this.height - 20, 14737632);
+                    this.width / 2, this.height - 20, ARGB.color(255, 14737632));
             // Draw version number
             FabricLoader.getInstance().getModContainer(ModernWarpMenu.MOD_ID).ifPresent(modContainer -> {
                 String name = modContainer.getMetadata().getName();
                 String version = modContainer.getMetadata().getVersion().getFriendlyString();
-                guiGraphics.drawCenteredString(Minecraft.getInstance().font, name + " " + version, this.width / 2, this.height - 10, 14737632);
+                guiGraphics.drawCenteredString(Minecraft.getInstance().font, name + " " + version, this.width / 2, this.height - 10, ARGB.color(255, 14737632));
             });
             // Shift to draw island grid instead of warp grid
             if (!hasShiftDown()) {
