@@ -408,7 +408,6 @@ public class ModernWarpScreen extends CustomContainerScreen{
             this.width = res.getScaledWidth();
             this.height = res.getScaledHeight();
         }*/
-        renderBg(guiGraphics, partialTick, mouseX, mouseY);
         List<CustomContainerButton> hoveredButtons = new ArrayList<>();
         // When multiple island buttons overlap, mark only the top one as hovered.
         for (GuiEventListener listener : this.children()) {
@@ -495,9 +494,8 @@ public class ModernWarpScreen extends CustomContainerScreen{
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(this.font, this.originalTitle, this.titleLabelX, this.titleLabelY, 4210752, false);
-        super.renderLabels(guiGraphics, mouseX, mouseY);
-
+        guiGraphics.drawString(this.font, this.originalTitle, this.titleLabelX, this.titleLabelY, -12566464, false);
+        guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, -12566464, false);
     }
 
     @Override

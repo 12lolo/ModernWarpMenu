@@ -92,6 +92,15 @@ public abstract class CustomContainerScreen extends ContainerScreen {
     }
 
     @Override
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        if (this.renderCustomUI) {
+            this.renderBg(guiGraphics, partialTick, mouseX, mouseY);
+        }else {
+            super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        }
+    }
+
+    @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
 
         if (this.renderCustomUI){
