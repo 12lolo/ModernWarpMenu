@@ -90,9 +90,9 @@ public class LayoutProvider implements DataProvider {
                                         "textures/gui/islands/end.png"), 707, 667),
                                 2, 2, 2, 0.15f,
                                 List.of(
-                                        new Warp(26, 20, "Spawn", "end"),
-                                        new Warp(11, 32, "Nest", "drag"),
-                                        new Warp(24, 30, "Void", "void")
+                                        new Warp(27, 18, "Spawn", "end"),
+                                        new Warp(11, 30, "Nest", "drag"),
+                                        new Warp(24, 28, "Void", "void")
                                 )
                         ),
                         new Island("Gold Mine",
