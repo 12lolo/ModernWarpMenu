@@ -20,12 +20,15 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.MultiLineTextWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.font.TextFieldHelper;
+import net.minecraft.client.gui.navigation.FocusNavigationEvent;
+import net.minecraft.client.gui.navigation.ScreenDirection;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.network.chat.Component;
@@ -501,6 +504,9 @@ public class ModernWarpScreen extends CustomContainerScreen{
 
     @Override
     protected boolean customUIKeyPressed(int keyCode, int scanCode, int modifiers) {
+        if (this.getFocused() != null && this.getFocused().keyPressed(keyCode, scanCode, modifiers)){
+            return true;
+        }
         if (guiInitException != null) return false;
         if (SettingsManager.get().debug.debugModeEnabled) {
             if (keyCode == InputConstants.KEY_R) {

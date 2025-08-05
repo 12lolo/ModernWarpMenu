@@ -6,10 +6,13 @@ import com.github.yukkuritaku.modernwarpmenu.client.gui.screens.transition.Scale
 import com.github.yukkuritaku.modernwarpmenu.data.layout.texture.LayoutTexture;
 import com.github.yukkuritaku.modernwarpmenu.data.settings.SettingsManager;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ARGB;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3x2fStack;
 
 import java.awt.*;
@@ -50,7 +53,7 @@ public class ScaleTransitionButton extends CustomContainerButton{
      */
     public void transitionStep(long scaleTransitionDuration, float hoveredScale) {
         this.transition.step();
-        if (this.isHovered) {
+        if (this.isHoveredOrFocused()) {
             if (this.transition.getEndScale() == 1) {
                 this.transition = new ScaleTransition((long) (this.transition.getProgress() * scaleTransitionDuration), this.transition.getCurrentScale(), hoveredScale);
             }
@@ -83,7 +86,7 @@ public class ScaleTransitionButton extends CustomContainerButton{
      */
     protected void renderButtonTexture(GuiGraphics guiGraphics, ResourceLocation texture) {
         int color;
-        if (this.isHovered) {
+        if (this.isHoveredOrFocused()) {
             color = new Color(HOVERED_BRIGHTNESS, HOVERED_BRIGHTNESS, HOVERED_BRIGHTNESS, 1f).getRGB();
         } else {
             color = new Color(UN_HOVERED_BRIGHTNESS, UN_HOVERED_BRIGHTNESS, UN_HOVERED_BRIGHTNESS, 1f).getRGB();
@@ -118,7 +121,7 @@ public class ScaleTransitionButton extends CustomContainerButton{
         String[] lines = this.getMessage().getString().split("\n");
         Matrix3x2fStack stack = guiGraphics.pose();
         Color color;
-        if (this.isHovered){
+        if (this.isHoveredOrFocused()){
             color = new Color((int) (textColor.getRed() * HOVERED_BRIGHTNESS),
                     (int) (textColor.getGreen() * HOVERED_BRIGHTNESS),
                     (int) (textColor.getBlue() * HOVERED_BRIGHTNESS), 255);
@@ -180,5 +183,10 @@ public class ScaleTransitionButton extends CustomContainerButton{
                 mouseY >= this.scaledYPosition &&
                 mouseX <= this.scaledXPosition + this.scaledWidth &&
                 mouseY <= this.scaledYPosition + this.scaledHeight;
+    }
+
+    @Override
+    public @Nullable ComponentPath nextFocusPath(FocusNavigationEvent event) {
+        return !this.isHovered ? super.nextFocusPath(event) : null;
     }
 }
