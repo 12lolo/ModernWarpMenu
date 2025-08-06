@@ -52,19 +52,18 @@ public class GameCheckUtils {
             try {
                 if (Minecraft.getInstance().level != null) {
                     Scoreboard sb = Minecraft.getInstance().level.getScoreboard();
-                    // SkyBlock sidebar objective
-                   // Objective scores = sb.getDisplayObjective(DisplaySlot.SIDEBAR);
-
                     // The date is always near the top (highest score) so we iterate backwards.
                     for (ScoreHolder holder : sb.getTrackedPlayers()) {
                         PlayerTeam team = sb.getPlayersTeam(holder.getScoreboardName());
                         if (team != null) {
-                            String scoreboardLine = team.getName().trim();
+                            String scoreboardLine = team.getPlayerPrefix().getString().trim();
                             seasonMatcher.reset(scoreboardLine);
                             if (seasonMatcher.matches()) {
                                 String seasonStage = seasonMatcher.group("seasonStage");
                                 String season = seasonMatcher.group("season");
-                                LOGGER.info("Season: {}, SeasonStage: {}", season, seasonStage);
+                                if (SettingsManager.get().debug.debugModeEnabled) {
+                                    LOGGER.info("Season: {}, SeasonStage: {}", season, seasonStage);
+                                }
                                 GameState.setSeasonStage(seasonStage);
                                 if (season != null) {
                                     GameState.setSeason(season);
