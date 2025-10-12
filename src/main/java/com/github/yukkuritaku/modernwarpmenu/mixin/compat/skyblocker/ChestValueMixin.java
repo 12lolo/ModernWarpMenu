@@ -1,18 +1,18 @@
 package com.github.yukkuritaku.modernwarpmenu.mixin.compat.skyblocker;
 
-import com.github.yukkuritaku.modernwarpmenu.client.gui.screens.ModernWarpScreen;
-import com.github.yukkuritaku.modernwarpmenu.data.settings.SettingsManager;
-import com.github.yukkuritaku.modernwarpmenu.data.skyblockconstants.menu.Menu;
+import com.github.yukkuritaku.modernwarpmenu.client.gui.screens.CustomContainerScreen;
+import com.google.common.collect.Lists;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import de.hysky.skyblocker.skyblock.ChestValue;
 import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 import me.fallenbreath.conditionalmixin.api.annotation.Restriction;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.List;
 
 @Restriction(require = {
         @Condition("skyblocker")
@@ -20,14 +20,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ChestValue.class)
 public class ChestValueMixin {
 
-    @Redirect(method = "lambda$init$3", at = @At(value = "INVOKE", target = "Ljava/lang/String;equals(Ljava/lang/Object;)Z"))
-    private static boolean onInit2(String instance, Object o){
-        return !instance.equals(o) || !instance.equals(Menu.FAST_TRAVEL.getDisplayName()) || !instance.equals(Menu.PORHTAL.getDisplayName());
-    }
-    @Inject(method = "lambda$init$3", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z"), cancellable = true)
-    private static void onInit(Minecraft client, Screen screen, int scaledWidth, int scaledHeight, CallbackInfo ci){
-        if (screen instanceof ModernWarpScreen && SettingsManager.get().general.warpMenuEnabled){
-            ci.cancel();
+    //@Inject(method = "lambda$init$3", at = @At(value = "INVOKE", target = "Lnet/fabricmc/fabric/api/client/screen/v1/Screens;getButtons(Lnet/minecraft/client/gui/screens/Screen;)Ljava/util/List;"), cancellable = true)
+    @WrapOperation(method = "lambda$init$3", at = @At(value = "INVOKE", target = "Lnet/fabricmc/fabric/api/client/screen/v1/Screens;getButtons(Lnet/minecraft/client/gui/screens/Screen;)Ljava/util/List;"))
+    private static List<AbstractWidget> onGetScreen(Screen screen, Operation<List<AbstractWidget>> original){
+        if (screen instanceof CustomContainerScreen){
+            // if current screen is warp menu, don't show chest value button
+            return Lists.newArrayList();
         }
+        // otherwise show chest value button
+        return original.call(screen);
     }
 }
