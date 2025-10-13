@@ -35,6 +35,7 @@ public class SkyBlockJoinListener {
         });
         ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register((client, level) -> {
             this.lastWorldSwitchTime = Util.getMillis();
+            this.serverBrandChecked = false;
             this.scoreboardChecked = false;
             GameState.setOnSkyBlock(false);
         });
