@@ -1,5 +1,6 @@
 package com.github.yukkuritaku.modernwarpmenu.listeners;
 
+import com.github.yukkuritaku.modernwarpmenu.data.settings.SettingsManager;
 import com.github.yukkuritaku.modernwarpmenu.state.GameState;
 import io.netty.channel.ChannelHandler;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
@@ -34,6 +35,7 @@ public class SkyBlockJoinListener {
         });
         ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register((client, level) -> {
             this.lastWorldSwitchTime = Util.getMillis();
+            this.serverBrandChecked = false;
             this.scoreboardChecked = false;
             GameState.setOnSkyBlock(false);
         });
@@ -44,7 +46,14 @@ public class SkyBlockJoinListener {
                 String serverBrand = player.connection.serverBrand();
                 if (!this.serverBrandChecked){
                     this.onHypixel = serverBrand != null && serverBrand.startsWith(SERVER_BRAND_START);
-                    this.serverBrandChecked = true;
+                    if (serverBrand != null) {
+                        this.serverBrandChecked = true;
+                    }else {
+                        LOGGER.warn("Server brand is null, retrying...");
+                    }
+                    if (SettingsManager.get().debug.debugModeEnabled){
+                        LOGGER.info("Server Brand: {}", serverBrand);
+                    }
                     if (this.onHypixel){
                         LOGGER.info("Player joined Hypixel.");
                     }
