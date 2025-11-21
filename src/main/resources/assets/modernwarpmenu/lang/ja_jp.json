@@ -51,7 +51,7 @@
 
   "modernwarpmenu.key.openWarpMenu": "Modern Warp Menuを開く",
 
-  "modernwarpmenu.key.categories.modernWarpMenu": "Modern Warp Menu",
+  "key.category.modernwarpmenu.modern_warp_menu": "Modern Warp Menu",
 
   "modernwarpmenu.messages.useWarpMenuInsteadOfCommand": "Modern Warp Menuを使用してください！",
   "modernwarpmenu.messages.modernWarpMenuEnabled": "Modern Warp Menuを有効化しました",

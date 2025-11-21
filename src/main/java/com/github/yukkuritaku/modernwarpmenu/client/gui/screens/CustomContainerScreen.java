@@ -10,6 +10,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -60,8 +62,8 @@ public abstract class CustomContainerScreen extends ContainerScreen {
     }
     protected abstract void renderButtons(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick);
     protected abstract void renderCustomUI(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick);
-    protected abstract boolean customUIKeyPressed(int keyCode, int scanCode, int modifiers);
-    protected abstract boolean customUIMouseClicked(double mouseX, double mouseY, int button);
+    protected abstract boolean customUIKeyPressed(KeyEvent event);
+    protected abstract boolean customUIMouseClicked(MouseButtonEvent event, boolean isDoubleClick);
 
     protected void setCustomUIState(boolean renderCustomUI, boolean customUIInteractionEnabled) {
         this.renderCustomUI = renderCustomUI;
@@ -118,46 +120,48 @@ public abstract class CustomContainerScreen extends ContainerScreen {
         }
     }
 
+
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyEvent event) {
         if (this.customUIInteractionEnabled){
-            if (keyCode == InputConstants.KEY_ESCAPE || Minecraft.getInstance().options.keyInventory.matches(keyCode, scanCode)){
+            if (event.key() == InputConstants.KEY_ESCAPE || Minecraft.getInstance().options.keyInventory.matches(event)){
                 // Pass through close window key presses
-                return super.keyPressed(keyCode, scanCode, modifiers);
+                return super.keyPressed(event);
             }else {
-                return customUIKeyPressed(keyCode, scanCode, modifiers);
+                return customUIKeyPressed(event);
             }
         }else {
-            return super.keyPressed(keyCode, scanCode, modifiers);
+            return super.keyPressed(event);
         }
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (this.customUIInteractionEnabled)
-            return customUIMouseClicked(mouseX, mouseY, button);
+            return customUIMouseClicked(event, isDoubleClick);
         else
-            return super.mouseClicked(mouseX, mouseY, button);
+            return super.mouseClicked(event, isDoubleClick);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public boolean mouseDragged(MouseButtonEvent event, double mouseX, double mouseY) {
         if (!this.customUIInteractionEnabled) {
-            return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+            return super.mouseDragged(event, mouseX, mouseY);
         }
         return true;
     }
 
+
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    public boolean mouseReleased(MouseButtonEvent event) {
         if (this.customUIInteractionEnabled){
-            if (this.selectedButton != null && button == InputConstants.MOUSE_BUTTON_LEFT){
-                boolean result = this.selectedButton.mouseReleased(mouseX, mouseY, button);
+            if (this.selectedButton != null && event.button() == InputConstants.MOUSE_BUTTON_LEFT){
+                boolean result = this.selectedButton.mouseReleased(event);
                 this.selectedButton = null;
                 return result;
             }
         }
-        return super.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(event);
     }
 
 

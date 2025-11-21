@@ -20,17 +20,16 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.MultiLineTextWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.font.TextFieldHelper;
-import net.minecraft.client.gui.navigation.FocusNavigationEvent;
-import net.minecraft.client.gui.navigation.ScreenDirection;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.Container;
@@ -89,6 +88,7 @@ public class ModernWarpScreen extends CustomContainerScreen{
              */
             setCustomUIState(true, true);
             this.inventoryListener = new InventoryChangeListener(new ChestItemChangeCallback(this));
+            LOGGER.info("<init> addListener");
             this.chestInventory.addListener(this.inventoryListener);
         }
         this.originalTitle =  Component.literal(warpMenu.getDisplayName());
@@ -125,8 +125,9 @@ public class ModernWarpScreen extends CustomContainerScreen{
                 ChatUtils.sendErrorMessageWithCopyableThrowable("modernwarpmenu.errors.modernWarpScreen.itemMatchFailed", e);
                 setCustomUIState(false, false);
             }finally {
-                // execute is required, because throw ConcurrentModificationException
-                Minecraft.getInstance().execute(() -> this.chestInventory.removeListener(this.inventoryListener));
+                // schedule is required, because throw ConcurrentModificationException
+                assert this.minecraft != null : "Minecraft is null";
+                this.minecraft.schedule(() -> this.chestInventory.removeListener(this.inventoryListener));
             }
         }
     }
@@ -294,7 +295,7 @@ public class ModernWarpScreen extends CustomContainerScreen{
         }catch (RuntimeException e){
             this.guiInitException = e;
             this.clearWidgets();
-            Minecraft.getInstance().execute(() -> this.chestInventory.removeListener(this.inventoryListener));
+            this.chestInventory.removeListener(this.inventoryListener);
             int lineCount = 2;
             int labelX = 0;
             int labelY = this.height / 5;
@@ -369,20 +370,19 @@ public class ModernWarpScreen extends CustomContainerScreen{
         }
     }
 
-
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (this.customUIInteractionEnabled) {
-            return customUIMouseClicked(mouseX, mouseY, button);
+            return customUIMouseClicked(event, isDoubleClick);
         } else {
             /*
              Don't send a C0EPacketClickWindow when clicking the config button while the custom UI is disabled
              A null check is required here as it's possible for clicks to occur before the button is initialized.
              */
-            if (button == InputConstants.MOUSE_BUTTON_LEFT && this.configButton != null && this.configButton.isHoveredOrFocused()) {
-                return this.configButton.mouseClicked(mouseX, mouseY, button);
+            if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && this.configButton != null && this.configButton.isHoveredOrFocused()) {
+                return this.configButton.mouseClicked(event, isDoubleClick);
             } else {
-                return super.mouseClicked(mouseX, mouseY, button);
+                return super.mouseClicked(event, isDoubleClick);
             }
         }
     }
@@ -469,7 +469,8 @@ public class ModernWarpScreen extends CustomContainerScreen{
                 guiGraphics.drawCenteredString(Minecraft.getInstance().font, name + " " + version, this.width / 2, this.height - 10, ARGB.color(255, 14737632));
             });
             // Shift to draw island grid instead of warp grid
-            if (!hasShiftDown()) {
+            if (!InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), InputConstants.KEY_LSHIFT) ||
+                    !InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), InputConstants.KEY_RSHIFT)) {
                 for (GuiEventListener button : this.children()) {
                     // Draw island button coordinate tooltips, draw last to prevent clipping
                     if (button instanceof IslandButton islandBtn && islandBtn.isHoveredOrFocused()) {
@@ -503,25 +504,25 @@ public class ModernWarpScreen extends CustomContainerScreen{
     }
 
     @Override
-    protected boolean customUIKeyPressed(int keyCode, int scanCode, int modifiers) {
-        if (this.getFocused() != null && this.getFocused().keyPressed(keyCode, scanCode, modifiers)){
+    protected boolean customUIKeyPressed(KeyEvent event) {
+        if (this.getFocused() != null && this.getFocused().keyPressed(event)){
             return true;
         }
         if (guiInitException != null) return false;
         if (SettingsManager.get().debug.debugModeEnabled) {
-            if (keyCode == InputConstants.KEY_R) {
-                if (hasShiftDown()) {
+            if (event.key() == InputConstants.KEY_R) {
+                if (event.hasShiftDown()) {
                     Minecraft.getInstance().reloadResourcePacks().thenAcceptAsync( v -> {
                         this.layout = ModernWarpMenuState.getLayoutForMenu(this.warpMenu);
                         init();
                     }, this.screenExecutor);
                     return true;
                 }
-            } else if (keyCode == InputConstants.KEY_TAB) {
+            } else if (event.key() == InputConstants.KEY_TAB) {
                 SettingsManager.get().debug.showDebugOverlay = !SettingsManager.get().debug.showDebugOverlay;
                 SettingsManager.save();
                 return true;
-            } else if (keyCode == InputConstants.KEY_B) {
+            } else if (event.key() == InputConstants.KEY_B) {
                 SettingsManager.get().debug.drawBorders = !SettingsManager.get().debug.drawBorders;
                 SettingsManager.save();
                 return true;
@@ -550,12 +551,12 @@ public class ModernWarpScreen extends CustomContainerScreen{
     }
 
     @Override
-    protected boolean customUIMouseClicked(double mouseX, double mouseY, int button) {
+    protected boolean customUIMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         // Left click
-        if (button == InputConstants.MOUSE_BUTTON_LEFT) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             for (GuiEventListener listener : this.children().reversed()) {
                 if (listener instanceof CustomContainerButton) {
-                    if (listener.mouseClicked(mouseX, mouseY, button)) {
+                    if (listener.mouseClicked(event, isDoubleClick)) {
                         break;
                     }
                 }

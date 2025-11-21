@@ -2,20 +2,17 @@ package com.github.yukkuritaku.modernwarpmenu.listeners;
 
 import com.github.yukkuritaku.modernwarpmenu.ModernWarpMenu;
 import com.github.yukkuritaku.modernwarpmenu.client.gui.screens.ModernWarpScreen;
-import com.github.yukkuritaku.modernwarpmenu.data.skyblockconstants.WarpCommandVariant;
 import com.github.yukkuritaku.modernwarpmenu.data.settings.SettingsManager;
+import com.github.yukkuritaku.modernwarpmenu.data.skyblockconstants.WarpCommandVariant;
 import com.github.yukkuritaku.modernwarpmenu.state.ModernWarpMenuState;
 import com.github.yukkuritaku.modernwarpmenu.utils.ChatUtils;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents;
-import net.fabricmc.fabric.api.client.screen.v1.ScreenMouseEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.font.TextFieldHelper;
 import net.minecraft.client.gui.screens.ChatScreen;
-import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 
@@ -76,8 +73,8 @@ public class ChatListener {
         });
         ScreenEvents.BEFORE_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
             if (screen instanceof ChatScreen) {
-                ScreenKeyboardEvents.allowKeyPress(screen).register((chatScreen, key, scancode, modifiers) -> {
-                    if (key == InputConstants.KEY_RETURN || key == InputConstants.KEY_NUMPADENTER){
+                ScreenKeyboardEvents.allowKeyPress(screen).register((chatScreen, context) -> {
+                    if (context.key() == InputConstants.KEY_RETURN || context.key() == InputConstants.KEY_NUMPADENTER){
                         this.chatMessageSendDetected = true;
                         return true;
                     }

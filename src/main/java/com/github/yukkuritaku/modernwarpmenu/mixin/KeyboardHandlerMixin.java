@@ -3,6 +3,7 @@ package com.github.yukkuritaku.modernwarpmenu.mixin;
 import com.github.yukkuritaku.modernwarpmenu.event.InputEvents;
 import net.minecraft.client.KeyboardHandler;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.input.KeyEvent;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,9 +17,9 @@ public class KeyboardHandlerMixin {
     @Shadow @Final private Minecraft minecraft;
 
     @Inject(method = "keyPress", at = @At("TAIL"))
-    private void onKeyPress(long windowPointer, int key, int scanCode, int action, int modifiers, CallbackInfo ci){
-        if (windowPointer == this.minecraft.getWindow().getWindow()) {
-            InputEvents.KEY_PRESSED.invoker().onKeyPressed(key, scanCode, action, modifiers);
+    private void onKeyPress(long window, int action, KeyEvent event, CallbackInfo ci){
+        if (window == this.minecraft.getWindow().handle()) {
+            InputEvents.KEY_PRESSED.invoker().onKeyPressed(event.key(), event.scancode(), action, event.modifiers());
         }
     }
 }

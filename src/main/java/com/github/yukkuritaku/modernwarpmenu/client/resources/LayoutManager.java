@@ -12,11 +12,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.JsonOps;
-import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import java.io.Reader;
 import java.util.Map;
 
-public class LayoutManager extends SimplePreparableReloadListener<LayoutManager.LayoutList> implements IdentifiableResourceReloadListener {
+public class LayoutManager extends SimplePreparableReloadListener<LayoutManager.LayoutList> implements PreparableReloadListener {
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private static final Logger LOGGER = LogUtils.getLogger();
@@ -77,11 +77,6 @@ public class LayoutManager extends SimplePreparableReloadListener<LayoutManager.
             }
         }
         object.layouts.forEach((key, value) -> LOGGER.info("Layout loaded {}", key));
-    }
-
-    @Override
-    public ResourceLocation getFabricId() {
-        return ResourceLocation.fromNamespaceAndPath(ModernWarpMenu.MOD_ID, "constants");
     }
 
     public record LayoutList(Map<ResourceLocation, Layout> layouts) {

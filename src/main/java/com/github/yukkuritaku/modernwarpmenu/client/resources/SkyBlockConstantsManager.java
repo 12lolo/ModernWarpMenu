@@ -11,11 +11,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.JsonOps;
-import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.slf4j.Logger;
@@ -25,7 +25,7 @@ import java.io.Reader;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-public class SkyBlockConstantsManager implements IdentifiableResourceReloadListener {
+public class SkyBlockConstantsManager implements PreparableReloadListener {
 
     private static final ResourceLocation SKY_BLOCK_CONSTANTS_LOCATION =
             ResourceLocation.fromNamespaceAndPath(ModernWarpMenu.MOD_ID,
@@ -86,14 +86,9 @@ public class SkyBlockConstantsManager implements IdentifiableResourceReloadListe
     }
 
     @Override
-    public CompletableFuture<Void> reload(PreparationBarrier preparationBarrier, ResourceManager resourceManager, Executor io, Executor game) {
-        return this.prepare(resourceManager, io)
-                .thenCompose(preparationBarrier::wait)
-                .thenAcceptAsync(this::apply, game);
-    }
-
-    @Override
-    public ResourceLocation getFabricId() {
-        return ResourceLocation.fromNamespaceAndPath(ModernWarpMenu.MOD_ID, "skyblock_constants");
+    public CompletableFuture<Void> reload(SharedState sharedState, Executor executor, PreparationBarrier barrier, Executor applyExecutor) {
+        return this.prepare(sharedState.resourceManager(), executor)
+                .thenCompose(barrier::wait)
+                .thenAcceptAsync(this::apply, applyExecutor);
     }
 }

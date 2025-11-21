@@ -49,7 +49,7 @@
 
   "modernwarpmenu.key.openWarpMenu": "打开传送菜单",
 
-  "modernwarpmenu.key.categories.modernWarpMenu": "Modern Warp Menu",
+  "key.category.modernwarpmenu.modern_warp_menu": "Modern Warp Menu",
 
   "modernwarpmenu.messages.useWarpMenuInsteadOfCommand": "试一试更精致的传送菜单吧！",
   "modernwarpmenu.messages.modernWarpMenuEnabled": "已启用更精致的传送菜单",

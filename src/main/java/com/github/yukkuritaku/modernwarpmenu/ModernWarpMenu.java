@@ -13,6 +13,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
@@ -22,8 +23,9 @@ public class ModernWarpMenu implements ClientModInitializer {
 
 	public static final String MOD_ID = "modernwarpmenu";
 	private static ModernWarpMenu instance;
+    private final KeyMapping.Category category = KeyMapping.Category.register(ResourceLocation.fromNamespaceAndPath(MOD_ID, "modern_warp_menu"));
 	private final KeyMapping keyOpenWarpMenu = KeyBindingHelper.registerKeyBinding(new KeyMapping("modernwarpmenu.key.openWarpMenu",
-			InputConstants.KEY_M, "modernwarpmenu.key.categories.modernWarpMenu"));
+			InputConstants.KEY_M, this.category));
 
 	private final SkyBlockConstantsManager skyBlockConstantsManager = new SkyBlockConstantsManager();
 	private final LayoutManager layoutManager = new LayoutManager();
@@ -36,14 +38,12 @@ public class ModernWarpMenu implements ClientModInitializer {
 	public void onInitializeClient() {
 		SettingsManager.init();
 		ModernWarpMenuCommand.registerCommands();
-		FabricLoader.getInstance().getModContainer(MOD_ID).ifPresent(modContainer -> {
-			ResourceManagerHelper.registerBuiltinResourcePack(ResourceLocation.fromNamespaceAndPath(MOD_ID, "ultra_wide_layout"),
-					modContainer,
-					Component.literal("21:9 Ultra wide layout pack"),
-					ResourcePackActivationType.NORMAL);
-		});
-		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(this.skyBlockConstantsManager);
-		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(this.layoutManager);
+		FabricLoader.getInstance().getModContainer(MOD_ID).ifPresent(modContainer -> ResourceManagerHelper.registerBuiltinResourcePack(ResourceLocation.fromNamespaceAndPath(MOD_ID, "ultra_wide_layout"),
+                modContainer,
+                Component.literal("21:9 Ultra wide layout pack"),
+                ResourcePackActivationType.NORMAL));
+		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(ResourceLocation.fromNamespaceAndPath(MOD_ID, "skyblock_constants"), this.skyBlockConstantsManager);
+		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(ResourceLocation.fromNamespaceAndPath(MOD_ID, "layouts"), this.layoutManager);
 		new ChatListener().registerEvents();
 		new SkyBlockJoinListener().registerEvents();
 		new WarpMenuListener().registerEvents();

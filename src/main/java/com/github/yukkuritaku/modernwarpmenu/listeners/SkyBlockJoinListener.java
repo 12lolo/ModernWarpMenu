@@ -59,7 +59,7 @@ public class SkyBlockJoinListener {
                     }
                 }
                 if (this.onHypixel && !this.scoreboardChecked){
-                    Scoreboard scoreboard = player.getScoreboard();
+                    Scoreboard scoreboard = player.level().getScoreboard();
                     boolean newSkyBlockState = scoreboard.getObjective("SBScoreboard") != null;
                     if (newSkyBlockState != GameState.isOnSkyBlock()) {
                         if (newSkyBlockState) {
