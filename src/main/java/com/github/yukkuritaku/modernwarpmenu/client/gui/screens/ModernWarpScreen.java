@@ -20,15 +20,12 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.MultiLineTextWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.font.TextFieldHelper;
-import net.minecraft.client.gui.navigation.FocusNavigationEvent;
-import net.minecraft.client.gui.navigation.ScreenDirection;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.network.chat.Component;
@@ -76,6 +73,9 @@ public class ModernWarpScreen extends CustomContainerScreen{
     private final Component originalTitle;
     protected long warpFailCoolDownExpiryTime;
     private long warpFailTooltipExpiryTime;
+
+    //Skyblocker Compatibility
+    private boolean disabledChestValueButton;
 
     public ModernWarpScreen(Menu warpMenu, ChestMenu menu, Inventory playerInventory, Layout layout) {
         super(menu, playerInventory, layout.backgroundTexture(), Component.empty());
@@ -398,6 +398,23 @@ public class ModernWarpScreen extends CustomContainerScreen{
 
     @Override
     protected void renderCustomUI(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        // Don't show ChestValue Button on warp menu, old way is used mixin to remove this button,
+        // but it's really buggy, so this is way better to compatibility
+        if (!disabledChestValueButton && FabricLoader.getInstance().isModLoaded("skyblocker")) {
+            this.children()
+                    .stream()
+                    .filter(listener -> listener instanceof Button button && button.getMessage().getString().equals("$"))
+                    .findFirst()
+                    .ifPresent(listener -> {
+                        if (listener instanceof Button button) {
+                            button.visible = false;
+                            button.active = false;
+                            LOGGER.info("[Modern Warp Menu] Set to Skyblocker ChestValue button visible to false");
+                            disabledChestValueButton = true;
+                        }
+                    });
+        }
+
         if (guiInitException != null) {
             drawExceptionScreen(guiGraphics, mouseX, mouseY, partialTick);
         }

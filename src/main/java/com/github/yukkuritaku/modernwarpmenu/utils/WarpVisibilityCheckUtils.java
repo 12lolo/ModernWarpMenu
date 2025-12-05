@@ -6,6 +6,7 @@ import com.github.yukkuritaku.modernwarpmenu.data.layout.Warp;
 import com.github.yukkuritaku.modernwarpmenu.data.settings.SettingsManager;
 import com.github.yukkuritaku.modernwarpmenu.state.GameState;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -70,9 +71,14 @@ public class WarpVisibilityCheckUtils {
                 String season = GameState.getSeason();
                 String seasonStage = GameState.getSeasonStage();
 
-                return season != null && seasonStage != null && season.equals("Winter") && seasonStage.equals("Late");
+                return (season != null && seasonStage != null && season.equals("Winter") && seasonStage.equals("Late"))
+                        || isDecember();
             default:
                 return true;
         }
+    }
+
+    private static boolean isDecember(){
+        return Calendar.getInstance().get(Calendar.MONTH) + 1 == 12;
     }
 }
