@@ -3,7 +3,6 @@
   "package": "com.github.yukkuritaku.modernwarpmenu.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "compat.skyblocker.ChestValueMixin"
   ],
   "client": [
     "KeyboardHandlerMixin",

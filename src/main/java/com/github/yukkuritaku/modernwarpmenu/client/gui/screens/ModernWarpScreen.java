@@ -39,6 +39,7 @@ import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 
 import java.awt.*;
@@ -48,12 +49,16 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 // TODO: Maybe selectable with keyboard?
-public class ModernWarpScreen extends CustomContainerScreen{
+public class ModernWarpScreen extends CustomContainerScreen {
 
     private static final Logger LOGGER = LogUtils.getLogger();
-    /** Delay in ms before the player can warp again if the last warp attempt failed */
+    /**
+     * Delay in ms before the player can warp again if the last warp attempt failed
+     */
     private static final long WARP_FAIL_COOL_DOWN = 500L;
-    /** The amount of time in ms that the error message remains on-screen after a failed warp attempt */
+    /**
+     * The amount of time in ms that the error message remains on-screen after a failed warp attempt
+     */
     private static final long WARP_FAIL_TOOLTIP_DISPLAY_TIME = 2000L;
 
     public final Menu warpMenu;
@@ -76,11 +81,14 @@ public class ModernWarpScreen extends CustomContainerScreen{
     protected long warpFailCoolDownExpiryTime;
     private long warpFailTooltipExpiryTime;
 
+    //Skyblocker Compatibility
+    private boolean disabledChestValueButton;
+
     public ModernWarpScreen(Menu warpMenu, ChestMenu menu, Inventory playerInventory, Layout layout) {
         super(menu, playerInventory, layout.backgroundTexture(), Component.empty());
         this.warpMenu = warpMenu;
         this.layout = layout;
-        this.chestInventory = (SimpleContainer)((ChestMenu)playerInventory.player.containerMenu).getContainer();
+        this.chestInventory = (SimpleContainer) ((ChestMenu) playerInventory.player.containerMenu).getContainer();
         if (SettingsManager.get().general.warpMenuEnabled) {
             /*
             Render a blank custom UI before buttons are enabled to prevent the vanilla chest UI from displaying
@@ -91,10 +99,14 @@ public class ModernWarpScreen extends CustomContainerScreen{
             LOGGER.info("<init> addListener");
             this.chestInventory.addListener(this.inventoryListener);
         }
-        this.originalTitle =  Component.literal(warpMenu.getDisplayName());
+        this.originalTitle = Component.literal(warpMenu.getDisplayName());
     }
 
-    public ScaledGrid getScaledGrid(){
+    private boolean hasShiftDown() {
+        return InputConstants.isKeyDown(this.window, GLFW.GLFW_KEY_LEFT_SHIFT) ||
+                InputConstants.isKeyDown(this.window, GLFW.GLFW_KEY_RIGHT_SHIFT);
+    }
+    public ScaledGrid getScaledGrid() {
         return this.grid;
     }
 
@@ -124,7 +136,7 @@ public class ModernWarpScreen extends CustomContainerScreen{
             } catch (RuntimeException e) {
                 ChatUtils.sendErrorMessageWithCopyableThrowable("modernwarpmenu.errors.modernWarpScreen.itemMatchFailed", e);
                 setCustomUIState(false, false);
-            }finally {
+            } finally {
                 // schedule is required, because throw ConcurrentModificationException
                 assert this.minecraft != null : "Minecraft is null";
                 this.minecraft.schedule(() -> this.chestInventory.removeListener(this.inventoryListener));
@@ -143,14 +155,15 @@ public class ModernWarpScreen extends CustomContainerScreen{
         // Labels are under the background for some reason
         guiGraphics.pose().pushMatrix();
         guiGraphics.pose().translate(0, 0);
-        for (Renderable renderable : ((ScreenAccessor)this).getRenderables()){
+        for (Renderable renderable : ((ScreenAccessor) this).getRenderables()) {
             renderable.render(guiGraphics, mouseX, mouseY, partialTick);
         }
         guiGraphics.pose().popMatrix();
-        for (GuiEventListener listener : this.children()){
-            ((Button)listener).render(guiGraphics, mouseX, mouseY, partialTick);
+        for (GuiEventListener listener : this.children()) {
+            ((Button) listener).render(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
+
     protected void addIslandButtons() {
         for (Island island : layout.islandList()) {
             addIslandButton(island);
@@ -170,14 +183,17 @@ public class ModernWarpScreen extends CustomContainerScreen{
         }
     }
 
-    protected void islandButtonHandler(IslandButton button){}
-    protected void warpButtonHandler(WarpButton button){}
+    protected void islandButtonHandler(IslandButton button) {
+    }
+
+    protected void warpButtonHandler(WarpButton button) {
+    }
 
     /**
      * Called when a warp attempt fails
      *
      * @param failMessageKey the translation key of the failure message to display on the Gui
-     * @param replacements replacement objects to substitute in place of placeholders in the translated message
+     * @param replacements   replacement objects to substitute in place of placeholders in the translated message
      */
     public void onWarpFail(String failMessageKey, Object... replacements) {
         long currentTime = Util.getMillis();
@@ -292,7 +308,7 @@ public class ModernWarpScreen extends CustomContainerScreen{
         try {
             addIslandButtons();
             updateButtonStates();
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
             this.guiInitException = e;
             this.clearWidgets();
             this.chestInventory.removeListener(this.inventoryListener);
@@ -332,6 +348,7 @@ public class ModernWarpScreen extends CustomContainerScreen{
                     }, Supplier::get));
             LOGGER.error("Errored!", e);
         }
+
     }
 
     @Override
@@ -389,7 +406,7 @@ public class ModernWarpScreen extends CustomContainerScreen{
 
     @Override
     protected void renderButtons(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        for (Renderable renderable : ((ScreenAccessor)this).getRenderables()) {
+        for (Renderable renderable : ((ScreenAccessor) this).getRenderables()) {
             if (renderable instanceof ConfigButton || SettingsManager.get().general.warpMenuEnabled) {
                 renderable.render(guiGraphics, mouseX, mouseY, partialTick);
             }
@@ -398,6 +415,24 @@ public class ModernWarpScreen extends CustomContainerScreen{
 
     @Override
     protected void renderCustomUI(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+
+        // Don't show ChestValue Button on warp menu, old way is used mixin to remove this button,
+        // but it's really buggy, so this is way better to compatibility
+        if (!disabledChestValueButton && FabricLoader.getInstance().isModLoaded("skyblocker")) {
+            this.children()
+                    .stream()
+                    .filter(listener -> listener instanceof Button button && button.getMessage().getString().equals("$"))
+                    .findFirst()
+                    .ifPresent(listener -> {
+                        if (listener instanceof Button button) {
+                            button.visible = false;
+                            button.active = false;
+                            LOGGER.info("[Modern Warp Menu] Set to Skyblocker ChestValue button visible to false");
+                            disabledChestValueButton = true;
+                        }
+                    });
+        }
+
         if (guiInitException != null) {
             drawExceptionScreen(guiGraphics, mouseX, mouseY, partialTick);
         }
@@ -469,8 +504,7 @@ public class ModernWarpScreen extends CustomContainerScreen{
                 guiGraphics.drawCenteredString(Minecraft.getInstance().font, name + " " + version, this.width / 2, this.height - 10, ARGB.color(255, 14737632));
             });
             // Shift to draw island grid instead of warp grid
-            if (!InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), InputConstants.KEY_LSHIFT) ||
-                    !InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), InputConstants.KEY_RSHIFT)) {
+            if (!hasShiftDown()) {
                 for (GuiEventListener button : this.children()) {
                     // Draw island button coordinate tooltips, draw last to prevent clipping
                     if (button instanceof IslandButton islandBtn && islandBtn.isHoveredOrFocused()) {
@@ -505,14 +539,14 @@ public class ModernWarpScreen extends CustomContainerScreen{
 
     @Override
     protected boolean customUIKeyPressed(KeyEvent event) {
-        if (this.getFocused() != null && this.getFocused().keyPressed(event)){
+        if (this.getFocused() != null && this.getFocused().keyPressed(event)) {
             return true;
         }
         if (guiInitException != null) return false;
         if (SettingsManager.get().debug.debugModeEnabled) {
             if (event.key() == InputConstants.KEY_R) {
                 if (event.hasShiftDown()) {
-                    Minecraft.getInstance().reloadResourcePacks().thenAcceptAsync( v -> {
+                    Minecraft.getInstance().reloadResourcePacks().thenAcceptAsync(v -> {
                         this.layout = ModernWarpMenuState.getLayoutForMenu(this.warpMenu);
                         init();
                     }, this.screenExecutor);
