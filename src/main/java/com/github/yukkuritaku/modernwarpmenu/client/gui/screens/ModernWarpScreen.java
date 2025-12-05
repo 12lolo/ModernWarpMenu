@@ -73,6 +73,9 @@ public class ModernWarpScreen extends CustomContainerScreen{
     protected long warpFailCoolDownExpiryTime;
     private long warpFailTooltipExpiryTime;
 
+    //Skyblocker Compatibility
+    private boolean disabledChestValueButton;
+
     public ModernWarpScreen(Menu warpMenu, ChestMenu menu, Inventory playerInventory, Layout layout) {
         super(menu, playerInventory, layout.backgroundTexture(), Component.empty());
         this.warpMenu = warpMenu;
@@ -384,6 +387,23 @@ public class ModernWarpScreen extends CustomContainerScreen{
 
     @Override
     protected void renderCustomUI(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        // Don't show ChestValue Button on warp menu, old way is used mixin to remove this button,
+        // but it's really buggy, so this is way better to compatibility
+        if (!disabledChestValueButton && FabricLoader.getInstance().isModLoaded("skyblocker")) {
+            this.children()
+                    .stream()
+                    .filter(listener -> listener instanceof Button button && button.getMessage().getString().equals("$"))
+                    .findFirst()
+                    .ifPresent(listener -> {
+                        if (listener instanceof Button button) {
+                            button.visible = false;
+                            button.active = false;
+                            LOGGER.info("[Modern Warp Menu] Set to Skyblocker ChestValue button visible to false");
+                            disabledChestValueButton = true;
+                        }
+                    });
+        }
+
         if (guiInitException != null) {
             drawExceptionScreen(guiGraphics, mouseX, mouseY, partialTick);
         }
