@@ -237,6 +237,11 @@ public class ModernWarpScreen extends CustomContainerScreen{
         guiGraphics.fill(drawX - 2, drawY - 2, drawX + 2, drawY + 2, Color.RED.getRGB());
     }
 
+    @Override
+    public void resize(Minecraft minecraft, int width, int height) {
+        super.resize(minecraft, width, height);
+        this.disabledChestValueButton = false;
+    }
 
     @Override
     protected void init() {
