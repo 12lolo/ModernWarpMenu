@@ -50,7 +50,7 @@ public class IslandButton extends ScaleTransitionButton{
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (this.visible) {
             int originalZ = this.getZLevel();
             transitionStep(SCALE_TRANSITION_DURATION, HOVERED_SCALE);

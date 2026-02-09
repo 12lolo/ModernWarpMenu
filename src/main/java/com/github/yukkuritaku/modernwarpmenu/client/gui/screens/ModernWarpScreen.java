@@ -18,7 +18,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.logging.LogUtils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -255,8 +255,8 @@ public class ModernWarpScreen extends CustomContainerScreen {
     }
 
     @Override
-    public void resize(Minecraft minecraft, int width, int height) {
-        super.resize(minecraft, width, height);
+    public void resize(int width, int height) {
+        super.resize(width, height);
         this.disabledChestValueButton = false;
     }
 
@@ -327,7 +327,7 @@ public class ModernWarpScreen extends CustomContainerScreen {
                     MultiLineTextWidget widget = new MultiLineTextWidget(labelX, labelY,
                             Component.translatable("modernwarpmenu.errors.modernWarpScreen.initFailed", getClass().getSimpleName()).withStyle(ChatFormatting.RED),
                             Minecraft.getInstance().font);
-                    widget.setColor(ARGB.white(1.0f));
+                    //widget.setColor(ARGB.white(1.0f));
                     widget.setWidth(this.width);
                     widget.setCentered(true);
                     this.addRenderableOnly(widget);
@@ -336,7 +336,7 @@ public class ModernWarpScreen extends CustomContainerScreen {
                             Component.literal(String.format("%s : %s", guiInitException.getClass().getName(), guiInitException.getLocalizedMessage()))
                                     .withStyle(ChatFormatting.WHITE),
                             Minecraft.getInstance().font);
-                    widget.setColor(ARGB.white(1.0f));
+                    //widget.setColor(ARGB.white(1.0f));
                     widget.setWidth(this.width);
                     widget.setCentered(true);
                     this.addRenderableOnly(widget);

@@ -48,5 +48,5 @@ public abstract class CustomContainerButton extends Button {
      * Disable the vanilla button rendering
      */
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {}
+    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {}
 }

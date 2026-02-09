@@ -13,7 +13,7 @@ import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ChestMenu;
 
@@ -21,7 +21,7 @@ public abstract class CustomContainerScreen extends ContainerScreen {
 
     protected Window window;
     protected ScaledGrid grid;
-    protected ResourceLocation backgroundTextureLocation;
+    protected Identifier backgroundTextureLocation;
     /**
      * {@code true} renders the custom UI, {@code false} renders the default chest UI
      */
@@ -38,7 +38,7 @@ public abstract class CustomContainerScreen extends ContainerScreen {
 
     public CustomContainerScreen(ChestMenu menu,
                                  Inventory playerInventory,
-                                 ResourceLocation backgroundTextureLocation, Component title) {
+                                 Identifier backgroundTextureLocation, Component title) {
         this(menu, playerInventory, backgroundTextureLocation, false, false, title);
     }
     /**
@@ -51,7 +51,7 @@ public abstract class CustomContainerScreen extends ContainerScreen {
 
     public CustomContainerScreen(ChestMenu menu,
                                  Inventory playerInventory,
-                                 ResourceLocation backgroundTextureLocation,
+                                 Identifier backgroundTextureLocation,
                                  boolean renderCustomUI,
                                  boolean customUIInteractionEnabled, Component title) {
         super(menu, playerInventory, title);

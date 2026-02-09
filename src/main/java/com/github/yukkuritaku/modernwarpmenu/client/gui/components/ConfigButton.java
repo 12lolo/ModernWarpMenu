@@ -46,11 +46,11 @@ public class ConfigButton extends ScaleTransitionButton{
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (this.visible){
             calculateHoverState(mouseX, mouseY);
             transitionStep(SCALE_TRANSITION_DURATION, HOVERED_SCALE);
-            super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+            super.renderContents(guiGraphics, mouseX, mouseY, partialTick);
             if (SettingsManager.get().general.enableUpdateNotification && ModernWarpMenu.updateAvailable()) {
                 renderForegroundLayer(guiGraphics, Button.NOTIFICATION);
             }
