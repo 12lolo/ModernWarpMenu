@@ -38,24 +38,22 @@ public class WarpButton extends ScaleTransitionButton{
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (this.visible) {
-            int originalZ = this.getZLevel();
-            calculateHoverState(mouseX, mouseY);
-            this.transition.setCurrentScale(this.parent.scaledGrid.getScaleFactor());
-            if (this.isHovered) {
-                this.setZLevel(19);
-            }
-            super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
-            if (this.isHovered){
-                renderForegroundLayer(guiGraphics, this.foregroundTexture.location());
-            }
-            if (this.drawWarpLabel && (!SettingsManager.get().general.hideWarpLabelsUntilIslandHovered ||
-                    this.parent.isHoveredOrFocused())) {
-                renderMessageString(guiGraphics, this.buttonRectangle.getWidth() / 2F, this.buttonRectangle.getHeight(), Color.WHITE);
-            }
-            this.setZLevel(originalZ);
+    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        int originalZ = this.getZLevel();
+        calculateHoverState(mouseX, mouseY);
+        this.transition.setCurrentScale(this.parent.scaledGrid.getScaleFactor());
+        if (this.isHovered) {
+            this.setZLevel(19);
         }
+        super.renderContents(guiGraphics, mouseX, mouseY, partialTick);
+        if (this.isHovered){
+            renderForegroundLayer(guiGraphics, this.foregroundTexture.location());
+        }
+        if (this.drawWarpLabel && (!SettingsManager.get().general.hideWarpLabelsUntilIslandHovered ||
+                this.parent.isHoveredOrFocused())) {
+            renderMessageString(guiGraphics, this.buttonRectangle.getWidth() / 2F, this.buttonRectangle.getHeight(), Color.WHITE);
+        }
+        this.setZLevel(originalZ);
     }
 
     public String getWarpCommand() {

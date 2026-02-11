@@ -22,7 +22,7 @@
 
 package com.github.yukkuritaku.modernwarpmenu.client.gui.screens.transition;
 
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 
 /**
  * This base class tracks a start time, end time, and the current system time's difference from the end time.

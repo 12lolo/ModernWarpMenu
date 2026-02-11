@@ -50,29 +50,28 @@ public class IslandButton extends ScaleTransitionButton{
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (this.visible) {
-            int originalZ = this.getZLevel();
-            transitionStep(SCALE_TRANSITION_DURATION, HOVERED_SCALE);
-            this.scaledGrid.setScaleFactor(this.transition.getCurrentScale());
-            this.scaledXPosition = this.scaledGrid.getGridStartX();
-            this.scaledYPosition = this.scaledGrid.getGridStartY();
-            this.scaledWidth = this.scaledGrid.getScaledDimension(this.width);
-            this.scaledHeight = this.scaledGrid.getScaledDimension(this.height);
-            if (this.isHovered) {
-                this.setZLevel(9);
-            }
-            renderButtonTexture(guiGraphics, this.backgroundTexture.location());
-            if (this.isHovered) {
-                renderForegroundLayer(guiGraphics, this.foregroundTexture.location());
-            }
-            if (SettingsManager.get().general.showIslandLabels) {
-                renderMessageString(guiGraphics, this.scaledWidth / 2f, this.scaledHeight, TEXT_GREEN_COLOR);
-            }
-            if (SettingsManager.get().debug.debugModeEnabled && SettingsManager.get().debug.drawBorders) {
-                renderBorder(guiGraphics, ARGB.white(1.0f));
-            }
-            this.setZLevel(originalZ);
+    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        int originalZ = this.getZLevel();
+        transitionStep(SCALE_TRANSITION_DURATION, HOVERED_SCALE);
+        this.scaledGrid.setScaleFactor(this.transition.getCurrentScale());
+        this.scaledXPosition = this.scaledGrid.getGridStartX();
+        this.scaledYPosition = this.scaledGrid.getGridStartY();
+        this.scaledWidth = this.scaledGrid.getScaledDimension(this.width);
+        this.scaledHeight = this.scaledGrid.getScaledDimension(this.height);
+        if (this.isHovered) {
+            this.setZLevel(9);
         }
+        renderButtonTexture(guiGraphics, this.backgroundTexture.location());
+        if (this.isHovered) {
+            renderForegroundLayer(guiGraphics, this.foregroundTexture.location());
+        }
+        if (SettingsManager.get().general.showIslandLabels) {
+            renderMessageString(guiGraphics, this.scaledWidth / 2f, this.scaledHeight, TEXT_GREEN_COLOR);
+        }
+        if (SettingsManager.get().debug.debugModeEnabled && SettingsManager.get().debug.drawBorders) {
+            renderBorder(guiGraphics, ARGB.white(1.0f));
+        }
+        this.setZLevel(originalZ);
     }
+
 }

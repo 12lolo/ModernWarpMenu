@@ -17,13 +17,13 @@ import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 public class ModernWarpMenu implements ClientModInitializer {
 
 	public static final String MOD_ID = "modernwarpmenu";
 	private static ModernWarpMenu instance;
-    private final KeyMapping.Category category = KeyMapping.Category.register(ResourceLocation.fromNamespaceAndPath(MOD_ID, "modern_warp_menu"));
+    private final KeyMapping.Category category = KeyMapping.Category.register(Identifier.fromNamespaceAndPath(MOD_ID, "modern_warp_menu"));
 	private final KeyMapping keyOpenWarpMenu = KeyBindingHelper.registerKeyBinding(new KeyMapping("modernwarpmenu.key.openWarpMenu",
 			InputConstants.KEY_M, this.category));
 
@@ -38,12 +38,12 @@ public class ModernWarpMenu implements ClientModInitializer {
 	public void onInitializeClient() {
 		SettingsManager.init();
 		ModernWarpMenuCommand.registerCommands();
-		FabricLoader.getInstance().getModContainer(MOD_ID).ifPresent(modContainer -> ResourceManagerHelper.registerBuiltinResourcePack(ResourceLocation.fromNamespaceAndPath(MOD_ID, "ultra_wide_layout"),
+		FabricLoader.getInstance().getModContainer(MOD_ID).ifPresent(modContainer -> ResourceManagerHelper.registerBuiltinResourcePack(Identifier.fromNamespaceAndPath(MOD_ID, "ultra_wide_layout"),
                 modContainer,
                 Component.literal("21:9 Ultra wide layout pack"),
                 ResourcePackActivationType.NORMAL));
-		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(ResourceLocation.fromNamespaceAndPath(MOD_ID, "skyblock_constants"), this.skyBlockConstantsManager);
-		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(ResourceLocation.fromNamespaceAndPath(MOD_ID, "layouts"), this.layoutManager);
+		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(Identifier.fromNamespaceAndPath(MOD_ID, "skyblock_constants"), this.skyBlockConstantsManager);
+		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(Identifier.fromNamespaceAndPath(MOD_ID, "layouts"), this.layoutManager);
 		new ChatListener().registerEvents();
 		new SkyBlockJoinListener().registerEvents();
 		new WarpMenuListener().registerEvents();

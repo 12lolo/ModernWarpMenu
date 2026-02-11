@@ -5,7 +5,7 @@ import com.github.yukkuritaku.modernwarpmenu.client.gui.components.IslandButton;
 import com.github.yukkuritaku.modernwarpmenu.client.gui.components.WarpButton;
 import com.github.yukkuritaku.modernwarpmenu.data.layout.Layout;
 import com.github.yukkuritaku.modernwarpmenu.data.skyblockconstants.menu.Menu;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ChestMenu;
 

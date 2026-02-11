@@ -14,7 +14,7 @@ import com.mojang.serialization.JsonOps;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -27,8 +27,8 @@ import java.util.concurrent.Executor;
 
 public class SkyBlockConstantsManager implements PreparableReloadListener {
 
-    private static final ResourceLocation SKY_BLOCK_CONSTANTS_LOCATION =
-            ResourceLocation.fromNamespaceAndPath(ModernWarpMenu.MOD_ID,
+    private static final Identifier SKY_BLOCK_CONSTANTS_LOCATION =
+            Identifier.fromNamespaceAndPath(ModernWarpMenu.MOD_ID,
                     "constants/skyblock_constants.json");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private static final Logger LOGGER = LogUtils.getLogger();
@@ -39,7 +39,7 @@ public class SkyBlockConstantsManager implements PreparableReloadListener {
         return skyBlockConstants;
     }
 
-    private static void handleLoadException(Resource resource, ResourceLocation location, Exception e) {
+    private static void handleLoadException(Resource resource, Identifier location, Exception e) {
         CrashReport crashReport = new CrashReport("Your Modern Warp Menu resource pack may be outdated, or something wrong with json", e);
         CrashReportCategory resourceCategory = crashReport.addCategory("Resource");
         CrashReportCategory resourcePackCategory = crashReport.addCategory("Resource Pack");

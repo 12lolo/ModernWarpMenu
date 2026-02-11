@@ -15,7 +15,7 @@ import com.mojang.serialization.JsonOps;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -31,7 +31,7 @@ public class LayoutManager extends SimplePreparableReloadListener<LayoutManager.
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    private static void loadLayout(Resource resource, ResourceLocation layoutId, ImmutableMap.Builder<ResourceLocation, Layout> builder) {
+    private static void loadLayout(Resource resource, Identifier layoutId, ImmutableMap.Builder<Identifier, Layout> builder) {
         try (Reader reader = resource.openAsReader()) {
             JsonElement jsonElement = GSON.fromJson(reader, JsonElement.class);
             Layout layout = Layout.CODEC.codec().parse(JsonOps.INSTANCE, jsonElement).getOrThrow(JsonParseException::new);
@@ -41,7 +41,7 @@ public class LayoutManager extends SimplePreparableReloadListener<LayoutManager.
         }
     }
 
-    private static void handleLoadException(Resource resource, ResourceLocation location, Exception e) {
+    private static void handleLoadException(Resource resource, Identifier location, Exception e) {
         CrashReport crashReport = new CrashReport("Your Modern Warp Menu resource pack may be outdated", e);
         CrashReportCategory resourceCategory = crashReport.addCategory("Resource");
         CrashReportCategory resourcePackCategory = crashReport.addCategory("Resource Pack");
@@ -52,14 +52,14 @@ public class LayoutManager extends SimplePreparableReloadListener<LayoutManager.
 
     @Override
     protected LayoutList prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
-        ImmutableMap.Builder<ResourceLocation, Layout> layoutBuilder = ImmutableMap.builder();
-        Map<ResourceLocation, Resource> resources = resourceManager.listResources("layouts",
-                resourceLocation ->
-                        resourceLocation.getNamespace().equalsIgnoreCase(ModernWarpMenu.MOD_ID) &&
-                                resourceLocation.getPath().endsWith(".json"));
+        ImmutableMap.Builder<Identifier, Layout> layoutBuilder = ImmutableMap.builder();
+        Map<Identifier, Resource> resources = resourceManager.listResources("layouts",
+                Identifier ->
+                        Identifier.getNamespace().equalsIgnoreCase(ModernWarpMenu.MOD_ID) &&
+                                Identifier.getPath().endsWith(".json"));
 
         for (var entry : resources.entrySet()) {
-            ResourceLocation location = entry.getKey();
+            Identifier location = entry.getKey();
             loadLayout(entry.getValue(), location, layoutBuilder);
         }
         return new LayoutList(layoutBuilder.build());
@@ -79,6 +79,6 @@ public class LayoutManager extends SimplePreparableReloadListener<LayoutManager.
         object.layouts.forEach((key, value) -> LOGGER.info("Layout loaded {}", key));
     }
 
-    public record LayoutList(Map<ResourceLocation, Layout> layouts) {
+    public record LayoutList(Map<Identifier, Layout> layouts) {
     }
 }

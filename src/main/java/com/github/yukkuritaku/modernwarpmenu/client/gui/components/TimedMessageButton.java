@@ -1,6 +1,6 @@
 package com.github.yukkuritaku.modernwarpmenu.client.gui.components;
 
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
@@ -29,8 +29,11 @@ public class TimedMessageButton extends Button {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        this.checkTimedMessage();
+    }
+
+    private void checkTimedMessage() {
         if (this.timedMessageExpiryTime > 0 && Util.getMillis() > this.timedMessageExpiryTime) {
             this.timedMessageExpiryTime = -1;
             this.setMessage(this.originalMessage);
