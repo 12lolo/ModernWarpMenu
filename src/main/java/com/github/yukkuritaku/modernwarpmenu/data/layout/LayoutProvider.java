@@ -87,8 +87,8 @@ public class LayoutProvider implements DataProvider {
                                 )),
                         new Island("The End",
                                 new LayoutTexture(ResourceLocation.fromNamespaceAndPath(ModernWarpMenu.MOD_ID,
-                                        "textures/gui/islands/end.png"), 707, 667),
-                                2, 2, 2, 0.15f,
+                                        "textures/gui/islands/end.png"), 1400, 1320),
+                                2, 2, 2, 0.20f,
                                 List.of(
                                         new Warp(27, 19, "Spawn", "end"),
                                         new Warp(13, 29, "Nest", "drag"),
