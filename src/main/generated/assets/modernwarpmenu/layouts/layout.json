@@ -171,15 +171,15 @@
       "grid_x": 2,
       "grid_y": 2,
       "hover_effect_texture": {
-        "height": 1320,
+        "height": 667,
         "location": "modernwarpmenu:textures/gui/islands/end.png",
-        "width": 1400
+        "width": 707
       },
       "name": "The End",
       "texture": {
-        "height": 1320,
+        "height": 667,
         "location": "modernwarpmenu:textures/gui/islands/end.png",
-        "width": 1400
+        "width": 707
       },
       "warp_list": [
         {
@@ -201,7 +201,7 @@
           "grid_y": 28
         }
       ],
-      "width_percentage": 0.2,
+      "width_percentage": 0.15,
       "z_level": 2
     },
     {
