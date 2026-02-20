@@ -6,7 +6,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ExtraCodecs;
 
 public class Button {
@@ -21,7 +21,7 @@ public class Button {
                     ).apply(instance, Button::new)
     ).validate(Button::validate);
     /** Overlay texture rendered when mod is outdated */
-    public static final ResourceLocation NOTIFICATION = ResourceLocation.fromNamespaceAndPath(ModernWarpMenu.MOD_ID, "textures/gui/notification.png");
+    public static final Identifier NOTIFICATION = Identifier.fromNamespaceAndPath(ModernWarpMenu.MOD_ID, "textures/gui/notification.png");
 
 
     public final LayoutTexture texture;

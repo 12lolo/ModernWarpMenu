@@ -38,7 +38,7 @@ public class WarpButton extends ScaleTransitionButton{
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (this.visible) {
             int originalZ = this.getZLevel();
             calculateHoverState(mouseX, mouseY);
@@ -46,7 +46,7 @@ public class WarpButton extends ScaleTransitionButton{
             if (this.isHovered) {
                 this.setZLevel(19);
             }
-            super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+            super.renderContents(guiGraphics, mouseX, mouseY, partialTick);
             if (this.isHovered){
                 renderForegroundLayer(guiGraphics, this.foregroundTexture.location());
             }

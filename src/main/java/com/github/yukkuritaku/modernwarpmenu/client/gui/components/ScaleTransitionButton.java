@@ -10,7 +10,7 @@ import net.minecraft.client.gui.ComponentPath;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3x2fStack;
@@ -84,7 +84,7 @@ public class ScaleTransitionButton extends CustomContainerButton{
      *
      * @param texture location of texture to draw
      */
-    protected void renderButtonTexture(GuiGraphics guiGraphics, ResourceLocation texture) {
+    protected void renderButtonTexture(GuiGraphics guiGraphics, Identifier texture) {
         int color;
         if (this.isHoveredOrFocused()) {
             color = new Color(HOVERED_BRIGHTNESS, HOVERED_BRIGHTNESS, HOVERED_BRIGHTNESS, 1f).getRGB();
@@ -140,7 +140,7 @@ public class ScaleTransitionButton extends CustomContainerButton{
         stack.popMatrix();
     }
 
-    protected void renderForegroundLayer(GuiGraphics guiGraphics, ResourceLocation foregroundTexture){
+    protected void renderForegroundLayer(GuiGraphics guiGraphics, Identifier foregroundTexture){
         if (foregroundTexture != null)
             renderButtonTexture(guiGraphics, foregroundTexture);
     }
@@ -149,7 +149,7 @@ public class ScaleTransitionButton extends CustomContainerButton{
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (this.visible) {
-            this.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+            this.renderContents(guiGraphics, mouseX, mouseY, partialTick);
             this.tooltip.refreshTooltipForNextRenderPass(
                     guiGraphics,
                     mouseX,
@@ -162,7 +162,7 @@ public class ScaleTransitionButton extends CustomContainerButton{
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (this.visible){
             this.buttonRectangle.scale(this.transition.getCurrentScale());
             this.scaledXPosition = this.buttonRectangle.getXPosition();

@@ -6,7 +6,7 @@ import com.mojang.serialization.JsonOps;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.nio.file.Path;
 import java.util.Collections;
@@ -29,7 +29,7 @@ public class SkyBlockConstantsProvider implements DataProvider {
     public record SkyBlockConstantsFile(SkyBlockConstants constants, String fileName) {
     }
 
-    protected Path getPath(ResourceLocation id) {
+    protected Path getPath(Identifier id) {
         return this.pathProvider.json(id);
     }
 
@@ -37,7 +37,7 @@ public class SkyBlockConstantsProvider implements DataProvider {
         CompletableFuture<?>[] completableFutures = new CompletableFuture<?>[this.skyBlockConstantsFiles.size()];
         int size = 0;
         for (var constant : this.skyBlockConstantsFiles) {
-            var target = getPath(ResourceLocation.fromNamespaceAndPath(this.modid, constant.fileName));
+            var target = getPath(Identifier.fromNamespaceAndPath(this.modid, constant.fileName));
             completableFutures[size++] = DataProvider.saveStable(cache, SkyBlockConstants.CODEC.codec()
                     .encodeStart(JsonOps.INSTANCE, constant.constants).getOrThrow(IllegalStateException::new), target);
         }

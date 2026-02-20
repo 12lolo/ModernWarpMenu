@@ -4,23 +4,23 @@ import com.github.yukkuritaku.modernwarpmenu.ModernWarpMenu;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.StringRepresentable;
 
 import java.util.List;
 
-public record Layout(LayoutType layoutType, ResourceLocation backgroundTexture,
+public record Layout(LayoutType layoutType, Identifier backgroundTexture,
                      List<Island> islandList,
                      WarpIcon warpIcon,
                      Button configButton,
                      Button regularWarpMenuButton) {
 
-    public static final ResourceLocation EMPTY = ResourceLocation.fromNamespaceAndPath(ModernWarpMenu.MOD_ID, "background_empty");
+    public static final Identifier EMPTY = Identifier.fromNamespaceAndPath(ModernWarpMenu.MOD_ID, "background_empty");
 
     public static final MapCodec<Layout> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(
                     LayoutType.CODEC.fieldOf("type").forGetter(Layout::layoutType),
-                    ResourceLocation.CODEC.optionalFieldOf("background", EMPTY).forGetter(layout -> layout.backgroundTexture),
+                    Identifier.CODEC.optionalFieldOf("background", EMPTY).forGetter(layout -> layout.backgroundTexture),
                     Island.CODEC.codec().listOf().fieldOf("island_list").forGetter(layout -> layout.islandList),
                     WarpIcon.CODEC.fieldOf("warp_icon").forGetter(layout -> layout.warpIcon),
                     Button.CODEC.fieldOf("config_button").forGetter(layout -> layout.configButton),
