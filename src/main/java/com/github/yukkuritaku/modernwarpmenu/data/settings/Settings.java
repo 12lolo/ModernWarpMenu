@@ -34,10 +34,11 @@ public class Settings {
         public boolean enableUpdateNotification = true;
         @SerialEntry
         public boolean showRegularWarpMenuButton = false;
+        @SerialEntry
+        public boolean useHypixelAPI = true;
     }
 
     public static class DebugSettings {
-
         @SerialEntry
         public boolean debugModeEnabled = false;
         @SerialEntry
