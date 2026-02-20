@@ -15,55 +15,55 @@
       "grid_x": 24,
       "grid_y": 17,
       "hover_effect_texture": {
-        "height": 674,
+        "height": 1340,
         "location": "modernwarpmenu:textures/gui/islands/hub.png",
-        "width": 883
+        "width": 1760
       },
       "name": "Hub",
       "texture": {
-        "height": 674,
+        "height": 1340,
         "location": "modernwarpmenu:textures/gui/islands/hub.png",
-        "width": 883
+        "width": 1760
       },
       "warp_list": [
         {
           "command_name": "hub",
           "display_name": "Spawn",
-          "grid_x": 19,
-          "grid_y": 11
+          "grid_x": 20,
+          "grid_y": 13
         },
         {
           "command_name": "museum",
           "display_name": "Museum",
-          "grid_x": 17,
-          "grid_y": 25
+          "grid_x": 18,
+          "grid_y": 22
         },
         {
           "command_name": "crypts",
           "display_name": "Crypts",
           "grid_x": 3,
-          "grid_y": 15
+          "grid_y": 11
         },
         {
           "command_name": "wizard",
           "display_name": "Wizard",
-          "grid_x": 26,
+          "grid_x": 27,
           "grid_y": 18
         },
         {
           "command_name": "da",
           "display_name": "Sirius (DA)",
-          "grid_x": 37,
-          "grid_y": 28
+          "grid_x": 33,
+          "grid_y": 26
         },
         {
           "command_name": "castle",
           "display_name": "Ruins",
-          "grid_x": 1,
-          "grid_y": 22
+          "grid_x": 2,
+          "grid_y": 23
         }
       ],
-      "width_percentage": 0.25,
+      "width_percentage": 0.26,
       "z_level": 0
     },
     {
@@ -132,7 +132,7 @@
     },
     {
       "grid_x": 14,
-      "grid_y": 12,
+      "grid_y": 13,
       "hover_effect_texture": {
         "height": 522,
         "location": "modernwarpmenu:textures/gui/islands/spiders_den.png",
@@ -171,28 +171,28 @@
       "grid_x": 2,
       "grid_y": 2,
       "hover_effect_texture": {
-        "height": 667,
+        "height": 1320,
         "location": "modernwarpmenu:textures/gui/islands/end.png",
-        "width": 707
+        "width": 1400
       },
       "name": "The End",
       "texture": {
-        "height": 667,
+        "height": 1320,
         "location": "modernwarpmenu:textures/gui/islands/end.png",
-        "width": 707
+        "width": 1400
       },
       "warp_list": [
         {
           "command_name": "end",
           "display_name": "Spawn",
           "grid_x": 27,
-          "grid_y": 18
+          "grid_y": 19
         },
         {
           "command_name": "drag",
           "display_name": "Nest",
-          "grid_x": 11,
-          "grid_y": 30
+          "grid_x": 13,
+          "grid_y": 29
         },
         {
           "command_name": "void",
@@ -201,7 +201,7 @@
           "grid_y": 28
         }
       ],
-      "width_percentage": 0.15,
+      "width_percentage": 0.2,
       "z_level": 2
     },
     {
@@ -253,7 +253,7 @@
         {
           "command_name": "dwarves",
           "display_name": "Dwarven\nMines",
-          "grid_x": 32,
+          "grid_x": 33,
           "grid_y": 12
         },
         {
@@ -265,7 +265,7 @@
         {
           "command_name": "tunnels",
           "display_name": "Tunnels",
-          "grid_x": 8,
+          "grid_x": 7,
           "grid_y": 12
         },
         {

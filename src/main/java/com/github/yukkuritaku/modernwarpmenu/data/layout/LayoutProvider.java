@@ -53,15 +53,15 @@ public class LayoutProvider implements DataProvider {
                         new Island("Hub",
                                 new LayoutTexture(Identifier.fromNamespaceAndPath(ModernWarpMenu.MOD_ID,
                                         "textures/gui/islands/hub.png"),
-                                        883, 674),
-                                24, 17, 0, 0.25f,
+                                        1760, 1340),
+                                24, 17, 0, 0.26f,
                                 List.of(
-                                        new Warp(19, 11, "Spawn", "hub"),
-                                        new Warp(17, 25, "Museum", "museum"),
-                                        new Warp(3, 15, "Crypts", "crypts"),
-                                        new Warp(26, 18, "Wizard", "wizard"),
-                                        new Warp(37, 28, "Sirius (DA)", "da"),
-                                        new Warp(1, 22, "Ruins", "castle")
+                                        new Warp(20, 13, "Spawn", "hub"),
+                                        new Warp(18, 22, "Museum", "museum"),
+                                        new Warp(3, 11, "Crypts", "crypts"),
+                                        new Warp(27, 18, "Wizard", "wizard"),
+                                        new Warp(33, 26, "Sirius (DA)", "da"),
+                                        new Warp(2, 23, "Ruins", "castle")
                                 )
                         ),
                         new Island("Crimson Isle",
@@ -79,7 +79,7 @@ public class LayoutProvider implements DataProvider {
                         new Island("Spider's Den",
                                 new LayoutTexture(Identifier.fromNamespaceAndPath(ModernWarpMenu.MOD_ID,
                                         "textures/gui/islands/spiders_den.png"), 790, 522),
-                                14, 12, 1, 0.15f,
+                                14, 13, 1, 0.15f,
                                 List.of(
                                         new Warp(23, 23, "Spawn", "spider"),
                                         new Warp(31, 1, "Top", "top"),
@@ -87,11 +87,11 @@ public class LayoutProvider implements DataProvider {
                                 )),
                         new Island("The End",
                                 new LayoutTexture(Identifier.fromNamespaceAndPath(ModernWarpMenu.MOD_ID,
-                                        "textures/gui/islands/end.png"), 707, 667),
-                                2, 2, 2, 0.15f,
+                                        "textures/gui/islands/end.png"), 1400, 1320),
+                                2, 2, 2, 0.20f,
                                 List.of(
-                                        new Warp(27, 18, "Spawn", "end"),
-                                        new Warp(11, 30, "Nest", "drag"),
+                                        new Warp(27, 19, "Spawn", "end"),
+                                        new Warp(13, 29, "Nest", "drag"),
                                         new Warp(24, 28, "Void", "void")
                                 )
                         ),
@@ -107,9 +107,9 @@ public class LayoutProvider implements DataProvider {
                                 39, 2, 2, 0.135f,
                                 List.of(
                                         new Warp(5, 21, "Spawn", "deep"),
-                                        new Warp(32, 12, "Dwarven\nMines", "dwarves"),
+                                        new Warp(33, 12, "Dwarven\nMines", "dwarves"),
                                         new Warp(20, 5, "Forge", "forge"),
-                                        new Warp(8, 12, "Tunnels", "tunnels"),
+                                        new Warp(7, 12, "Tunnels", "tunnels"),
                                         new Warp(31, 26, "Hollows", "ch"),
                                         new Warp(18, 30, "Nucleus", "nucleus")
                                 )),

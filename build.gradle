@@ -56,6 +56,9 @@ repositories {
 
 	//conditional-mixin https://github.com/Fallen-Breath/conditional-mixin
 	maven { url 'https://maven.fallenbreath.me/releases' }
+
+	maven { url 'https://repo.hypixel.net/repository/Hypixel/' }
+	maven { url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1" }
 }
 
 dependencies {
@@ -77,6 +80,8 @@ dependencies {
 	modCompileOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
 	modCompileOnly "maven.modrinth:skyblocker-liap:${project.skyblocker_version}"
 	include(modImplementation("me.fallenbreath:conditional-mixin-fabric:${project.conditional_mixin_version}"))
+	include(modImplementation("net.hypixel:mod-api:${project.hypixel_mod_api_version}"))
+	modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:1.2.2")
 }
 
 processResources {
