@@ -30,7 +30,10 @@ public class TimedMessageButton extends Button {
 
     @Override
     protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+        this.checkTimedMessage();
+    }
+
+    private void checkTimedMessage() {
         if (this.timedMessageExpiryTime > 0 && Util.getMillis() > this.timedMessageExpiryTime) {
             this.timedMessageExpiryTime = -1;
             this.setMessage(this.originalMessage);

@@ -54,9 +54,9 @@ public class LayoutManager extends SimplePreparableReloadListener<LayoutManager.
     protected LayoutList prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
         ImmutableMap.Builder<Identifier, Layout> layoutBuilder = ImmutableMap.builder();
         Map<Identifier, Resource> resources = resourceManager.listResources("layouts",
-                resourceLocation ->
-                        resourceLocation.getNamespace().equalsIgnoreCase(ModernWarpMenu.MOD_ID) &&
-                                resourceLocation.getPath().endsWith(".json"));
+                Identifier ->
+                        Identifier.getNamespace().equalsIgnoreCase(ModernWarpMenu.MOD_ID) &&
+                                Identifier.getPath().endsWith(".json"));
 
         for (var entry : resources.entrySet()) {
             Identifier location = entry.getKey();

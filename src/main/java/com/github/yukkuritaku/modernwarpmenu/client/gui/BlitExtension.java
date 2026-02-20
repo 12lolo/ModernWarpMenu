@@ -58,11 +58,7 @@ public interface BlitExtension {
         gui.guiRenderState
                 .submitGuiElement(
                         new BlitFloatRenderState(
-                                pipeline,
-                                TextureSetup.singleTexture(
-                                        atlasTexture,
-                                        RenderSystem.getSamplerCache().getClampToEdge(FilterMode.NEAREST)),
-                                new Matrix3x2f(gui.pose()), x0, y0, x1, y1, u0, u1, v0, v1, color, gui.scissorStack.peek()
+                                pipeline, TextureSetup.singleTexture(atlasTexture, RenderSystem.getSamplerCache().getClampToEdge(FilterMode.LINEAR)), new Matrix3x2f(gui.pose()), x0, y0, x1, y1, u0, u1, v0, v1, color, gui.scissorStack.peek()
                         )
                 );
     }

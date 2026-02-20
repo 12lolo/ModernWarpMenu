@@ -327,7 +327,6 @@ public class ModernWarpScreen extends CustomContainerScreen {
                     MultiLineTextWidget widget = new MultiLineTextWidget(labelX, labelY,
                             Component.translatable("modernwarpmenu.errors.modernWarpScreen.initFailed", getClass().getSimpleName()).withStyle(ChatFormatting.RED),
                             Minecraft.getInstance().font);
-                    //widget.setColor(ARGB.white(1.0f));
                     widget.setWidth(this.width);
                     widget.setCentered(true);
                     this.addRenderableOnly(widget);
@@ -336,7 +335,6 @@ public class ModernWarpScreen extends CustomContainerScreen {
                             Component.literal(String.format("%s : %s", guiInitException.getClass().getName(), guiInitException.getLocalizedMessage()))
                                     .withStyle(ChatFormatting.WHITE),
                             Minecraft.getInstance().font);
-                    //widget.setColor(ARGB.white(1.0f));
                     widget.setWidth(this.width);
                     widget.setCentered(true);
                     this.addRenderableOnly(widget);

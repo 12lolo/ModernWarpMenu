@@ -66,10 +66,8 @@ public class RegularWarpMenuButton extends ScaleTransitionButton{
 
     @Override
     protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (this.visible) {
-            calculateHoverState(mouseX, mouseY);
-            transitionStep(SCALE_TRANSITION_DURATION, HOVERED_SCALE);
-            super.renderContents(guiGraphics, mouseX, mouseY, partialTick);
-        }
+        calculateHoverState(mouseX, mouseY);
+        transitionStep(SCALE_TRANSITION_DURATION, HOVERED_SCALE);
+        super.renderContents(guiGraphics, mouseX, mouseY, partialTick);
     }
 }
