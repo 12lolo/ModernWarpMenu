@@ -149,7 +149,7 @@ public class ScaleTransitionButton extends CustomContainerButton{
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (this.visible) {
-            this.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+            this.renderContents(guiGraphics, mouseX, mouseY, partialTick);
             this.tooltip.refreshTooltipForNextRenderPass(
                     guiGraphics,
                     mouseX,

@@ -93,6 +93,14 @@ public class GeneralCategory {
                                 value -> config.general.showRegularWarpMenuButton = value)
                         .controller(option -> BooleanControllerBuilder.create(option).yesNoFormatter().coloured(true))
                         .build())
+                .option(Option.<Boolean>createBuilder()
+                        .name(Component.translatable("modernwarpmenu.config.general.useHypixelAPI"))
+                        .description(OptionDescription.of(Component.translatable("modernwarpmenu.config.general.useHypixelAPI.tooltip")))
+                        .binding(defaults.general.useHypixelAPI,
+                                () -> config.general.useHypixelAPI,
+                                value -> config.general.useHypixelAPI = value)
+                        .controller(option -> BooleanControllerBuilder.create(option).yesNoFormatter().coloured(true))
+                        .build())
                 .build();
     }
 }

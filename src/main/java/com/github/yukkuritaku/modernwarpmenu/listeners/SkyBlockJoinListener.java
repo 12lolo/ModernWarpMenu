@@ -6,6 +6,10 @@ import io.netty.channel.ChannelHandler;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
+import net.hypixel.data.type.GameType;
+import net.hypixel.modapi.HypixelModAPI;
+import net.hypixel.modapi.packet.impl.clientbound.ClientboundHelloPacket;
+import net.hypixel.modapi.packet.impl.clientbound.event.ClientboundLocationPacket;
 import net.minecraft.util.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -24,6 +28,31 @@ public class SkyBlockJoinListener {
     private boolean scoreboardChecked;
     private long lastWorldSwitchTime;
 
+    public SkyBlockJoinListener(){
+        HypixelModAPI.getInstance().subscribeToEventPacket(ClientboundLocationPacket.class);
+        HypixelModAPI.getInstance().createHandler(ClientboundHelloPacket.class, packet -> {
+            if (SettingsManager.get().general.useHypixelAPI) {
+                this.onHypixel = true;
+                LOGGER.info("Player joined Hypixel.");
+            }
+        });
+        HypixelModAPI.getInstance().createHandler(ClientboundLocationPacket.class, packet -> {
+
+            if (SettingsManager.get().general.useHypixelAPI) {
+                if (packet.getServerType().isPresent()) {
+                    boolean isSkyBlock = packet.getServerType().get() == GameType.SKYBLOCK;
+                    if (isSkyBlock) {
+                        LOGGER.info("Player joined SkyBlock.");
+                    } else {
+                        LOGGER.info("Player left SkyBlock.");
+                    }
+                    GameState.setOnSkyBlock(isSkyBlock);
+                }
+                this.onHypixel = true;
+            }
+        });
+    }
+
     public void registerEvents(){
         ClientLoginConnectionEvents.DISCONNECT.register((handler, client) -> {
             if (this.onHypixel){
@@ -34,45 +63,50 @@ public class SkyBlockJoinListener {
             }
         });
         ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register((client, level) -> {
-            this.lastWorldSwitchTime = Util.getMillis();
-            this.serverBrandChecked = false;
-            this.scoreboardChecked = false;
-            GameState.setOnSkyBlock(false);
+
+            if (!SettingsManager.get().general.useHypixelAPI) {
+                this.lastWorldSwitchTime = Util.getMillis();
+                this.serverBrandChecked = false;
+                this.scoreboardChecked = false;
+                GameState.setOnSkyBlock(false);
+            }
         });
         ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
-            if (!this.serverBrandChecked || this.onHypixel && !this.scoreboardChecked){
-                LocalPlayer player = Minecraft.getInstance().player;
-                if (player == null) return;
-                String serverBrand = player.connection.serverBrand();
-                if (!this.serverBrandChecked){
-                    this.onHypixel = serverBrand != null && serverBrand.startsWith(SERVER_BRAND_START);
-                    if (serverBrand != null) {
-                        this.serverBrandChecked = true;
-                    }else {
-                        LOGGER.warn("Server brand is null, retrying...");
-                    }
-                    if (SettingsManager.get().debug.debugModeEnabled){
-                        LOGGER.info("Server Brand: {}", serverBrand);
-                    }
-                    if (this.onHypixel){
-                        LOGGER.info("Player joined Hypixel.");
-                    }
-                }
-                if (this.onHypixel && !this.scoreboardChecked){
-                    Scoreboard scoreboard = player.level().getScoreboard();
-                    boolean newSkyBlockState = scoreboard.getObjective("SBScoreboard") != null;
-                    if (newSkyBlockState != GameState.isOnSkyBlock()) {
-                        if (newSkyBlockState) {
-                            LOGGER.info("Player joined SkyBlock.");
+            if (!SettingsManager.get().general.useHypixelAPI) {
+                if (!this.serverBrandChecked || this.onHypixel && !this.scoreboardChecked) {
+                    LocalPlayer player = Minecraft.getInstance().player;
+                    if (player == null) return;
+                    String serverBrand = player.connection.serverBrand();
+                    if (!this.serverBrandChecked) {
+                        this.onHypixel = serverBrand != null && serverBrand.startsWith(SERVER_BRAND_START);
+                        if (serverBrand != null) {
+                            this.serverBrandChecked = true;
                         } else {
-                            LOGGER.info("Player left SkyBlock.");
+                            LOGGER.warn("Server brand is null, retrying...");
                         }
-                        GameState.setOnSkyBlock(newSkyBlockState);
-                        this.scoreboardChecked = true;
+                        if (SettingsManager.get().debug.debugModeEnabled) {
+                            LOGGER.info("Server Brand: {}", serverBrand);
+                        }
+                        if (this.onHypixel) {
+                            LOGGER.info("Player joined Hypixel.");
+                        }
                     }
-                    if (Util.getMillis() - this.lastWorldSwitchTime > SCOREBOARD_CHECK_TIME_OUT) {
-                        LOGGER.warn("Scoreboard Check Time out.");
-                        this.scoreboardChecked = true;
+                    if (this.onHypixel && !this.scoreboardChecked) {
+                        Scoreboard scoreboard = player.level().getScoreboard();
+                        boolean newSkyBlockState = scoreboard.getObjective("SBScoreboard") != null;
+                        if (newSkyBlockState != GameState.isOnSkyBlock()) {
+                            if (newSkyBlockState) {
+                                LOGGER.info("Player joined SkyBlock.");
+                            } else {
+                                LOGGER.info("Player left SkyBlock.");
+                            }
+                            GameState.setOnSkyBlock(newSkyBlockState);
+                            this.scoreboardChecked = true;
+                        }
+                        if (Util.getMillis() - this.lastWorldSwitchTime > SCOREBOARD_CHECK_TIME_OUT) {
+                            LOGGER.warn("Scoreboard Check Time out.");
+                            this.scoreboardChecked = true;
+                        }
                     }
                 }
             }
