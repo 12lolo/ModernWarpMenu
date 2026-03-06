@@ -1,4 +1,4 @@
-﻿{
+{
   "type": "overworld",
   "config_button": {
     "grid_x": 60,
@@ -285,7 +285,7 @@
       "z_level": 2
     },
     {
-      "grid_x": 38,
+      "grid_x": 39,
       "grid_y": 30,
       "hover_effect_texture": {
         "height": 488,
@@ -311,7 +311,7 @@
     },
     {
       "grid_x": 43,
-      "grid_y": 24,
+      "grid_y": 25,
       "hover_effect_texture": {
         "height": 569,
         "location": "modernwarpmenu:textures/gui/islands/garden.png",
@@ -512,8 +512,8 @@
       "z_level": 2
     },
     {
-      "grid_x": 47,
-      "grid_y": 31,
+      "grid_x": 51,
+      "grid_y": 29,
       "hover_effect_texture": {
         "height": 512,
         "location": "modernwarpmenu:textures/gui/islands/dungeon_hub.png",
@@ -537,8 +537,8 @@
       "z_level": 2
     },
     {
-      "grid_x": 53,
-      "grid_y": 27,
+      "grid_x": 55,
+      "grid_y": 24,
       "hover_effect_texture": {
         "height": 268,
         "location": "modernwarpmenu:textures/gui/islands/rift_npc.png",

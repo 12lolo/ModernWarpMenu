@@ -124,12 +124,18 @@
       position: relative;
       border-radius: 8px;
       border: 1px dashed rgba(255,255,255,.2);
-      background:
-        repeating-linear-gradient(to right, rgba(255,255,255,.1), rgba(255,255,255,.1) 1px, transparent 1px, transparent calc(100% / 64)),
-        repeating-linear-gradient(to bottom, rgba(255,255,255,.1), rgba(255,255,255,.1) 1px, transparent 1px, transparent calc(100% / 36));
+      background: transparent;
       overflow: hidden;
       user-select: none;
       touch-action: none;
+    }
+    .stage-grid {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
     }
 
     .stage-resizer {
@@ -181,6 +187,7 @@
       overflow: hidden;
       text-align: center;
       padding: 4px;
+      transition: left 140ms ease, top 140ms ease, width 140ms ease, height 140ms ease, filter 140ms ease;
     }
     .island:active { cursor: grabbing; }
     .island.selected { outline: 2px solid var(--accent); z-index: 99999 !important; }
@@ -222,6 +229,7 @@
       cursor: grab;
       overflow: hidden;
       z-index: 200000;
+      transition: left 140ms ease, top 140ms ease, width 140ms ease, height 140ms ease, filter 140ms ease;
     }
     .portal:active { cursor: grabbing; }
     .portal.selected { outline: 2px solid #ffe486; }
@@ -256,6 +264,7 @@
       border: none;
       background: transparent;
     }
+    body.mode-preview .stage-grid { display: none; }
     body.mode-preview .island {
       border: none;
       background: transparent;
@@ -400,6 +409,12 @@
   const SCREEN_GRID_H = 36;
   const ISLAND_GRID_SIZE = 40;
   const DEFAULT_LAYOUT_PATH = "../src/main/generated/assets/modernwarpmenu/layouts/layout.json";
+  const ULTRAWIDE_LAYOUT_PATH = "../src/main/resources/resourcepacks/ultra_wide_layout/assets/modernwarpmenu/layouts/layout.json";
+  const ULTRAWIDE_BASE_RATIO = 3440 / 1440;
+  const ULTRAWIDE_RATIO_TOLERANCE = 0.10;
+  const ULTRAWIDE_MIN_RATIO = ULTRAWIDE_BASE_RATIO * (1 - ULTRAWIDE_RATIO_TOLERANCE);
+  const ULTRAWIDE_MAX_RATIO = ULTRAWIDE_BASE_RATIO * (1 + ULTRAWIDE_RATIO_TOLERANCE);
+  const NON_ULTRAWIDE_MAX_RATIO = ULTRAWIDE_MIN_RATIO - 0.01;
 
   const state = {
     raw: null,
@@ -415,11 +430,15 @@
     mode: "editor",
     fixedConfigRect: null,
     fixedSettingsEl: null,
+    gridCanvas: null,
     lastPointerClientX: null,
     lastPointerClientY: null,
     zoom: 1,
     stageW: 1920,
-    stageH: 1080
+    stageH: 1080,
+    loadedLayoutPath: DEFAULT_LAYOUT_PATH,
+    loadedJsonText: "",
+    activePresetValue: "1920x1080"
   };
 
   const els = {
@@ -493,6 +512,7 @@
   function applyStageDimensions() {
     els.stage.style.width = `${state.stageW}px`;
     els.stage.style.height = `${state.stageH}px`;
+    drawGrid();
     updateStageMeta();
   }
 
@@ -565,6 +585,65 @@
 
   function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
 
+  function getLayoutPathForPresetValue(presetValue) {
+    return presetValue === "3440x1440" ? ULTRAWIDE_LAYOUT_PATH : DEFAULT_LAYOUT_PATH;
+  }
+
+  function getLayoutPathLabel(layoutPath) {
+    if (layoutPath === ULTRAWIDE_LAYOUT_PATH) {
+      return "ultrawide resource-pack layout.json";
+    }
+    return "default generated layout.json";
+  }
+
+  function getSaveTargetKey() {
+    return isUltrawideLayoutActive() ? "ultrawide" : "default";
+  }
+
+  function getRepoLayoutPathForTarget(targetKey) {
+    if (targetKey === "ultrawide") {
+      return "src/main/resources/resourcepacks/ultra_wide_layout/assets/modernwarpmenu/layouts/layout.json";
+    }
+    return "src/main/generated/assets/modernwarpmenu/layouts/layout.json";
+  }
+
+  function isUltrawideLayoutActive() {
+    return (state.loadedLayoutPath || DEFAULT_LAYOUT_PATH) === ULTRAWIDE_LAYOUT_PATH;
+  }
+
+  function clampStageDimensions(requestedW, requestedH) {
+    let w = clamp(Math.round(requestedW), 320, 4096);
+    let h = clamp(Math.round(requestedH), 320, 4096);
+
+    const minRatio = isUltrawideLayoutActive() ? ULTRAWIDE_MIN_RATIO : null;
+    const maxRatio = isUltrawideLayoutActive() ? ULTRAWIDE_MAX_RATIO : NON_ULTRAWIDE_MAX_RATIO;
+
+    let ratio = w / h;
+    if (minRatio !== null && ratio < minRatio) {
+      const targetW = Math.round(h * minRatio);
+      if (targetW <= 4096) {
+        w = targetW;
+      } else {
+        h = clamp(Math.round(w / minRatio), 320, 4096);
+      }
+      ratio = w / h;
+    }
+
+    if (maxRatio !== null && ratio > maxRatio) {
+      const targetW = Math.round(h * maxRatio);
+      if (targetW >= 320) {
+        w = targetW;
+      } else {
+        h = clamp(Math.round(w / maxRatio), 320, 4096);
+      }
+    }
+
+    return {
+      w: clamp(w, 320, 4096),
+      h: clamp(h, 320, 4096)
+    };
+  }
+
   function layoutSnapshot() {
     if (!state.raw || !Array.isArray(state.raw.island_list)) return [];
     return state.raw.island_list.map(island => ({
@@ -586,6 +665,16 @@
       }
     }
     return true;
+  }
+
+  function hasUnsavedChanges() {
+    if (!state.raw) return false;
+    const baseSnapshot = state.originalSnapshot || [];
+    const currentSnapshot = layoutSnapshot();
+    const layoutChanged = !snapshotsEqual(baseSnapshot, currentSnapshot);
+    const canonicalJson = JSON.stringify(state.raw, null, 2);
+    const paneChanged = els.jsonInput.value.trim() !== canonicalJson.trim();
+    return layoutChanged || paneChanged;
   }
 
   function applySnapshot(snapshot) {
@@ -853,8 +942,58 @@
     });
   }
 
+  function ensureGridLayer() {
+    if (state.gridCanvas && state.gridCanvas.parentElement === els.stage) return state.gridCanvas;
+    const canvas = document.createElement("canvas");
+    canvas.className = "stage-grid";
+    els.stage.prepend(canvas);
+    state.gridCanvas = canvas;
+    return canvas;
+  }
+
+  function drawGrid() {
+    const canvas = state.gridCanvas;
+    if (!canvas) return;
+
+    const w = Math.max(1, state.stageW);
+    const h = Math.max(1, state.stageH);
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    const pixelW = Math.max(1, Math.round(w * dpr));
+    const pixelH = Math.max(1, Math.round(h * dpr));
+
+    if (canvas.width !== pixelW) canvas.width = pixelW;
+    if (canvas.height !== pixelH) canvas.height = pixelH;
+    canvas.style.width = `${w}px`;
+    canvas.style.height = `${h}px`;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    ctx.strokeStyle = "rgba(255,255,255,0.1)";
+    ctx.lineWidth = 1;
+
+    const stepX = w / SCREEN_GRID_W;
+    const stepY = h / SCREEN_GRID_H;
+
+    ctx.beginPath();
+    for (let i = 1; i < SCREEN_GRID_W; i++) {
+      const x = Math.round(i * stepX) + 0.5;
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, h);
+    }
+    for (let i = 1; i < SCREEN_GRID_H; i++) {
+      const y = Math.round(i * stepY) + 0.5;
+      ctx.moveTo(0, y);
+      ctx.lineTo(w, y);
+    }
+    ctx.stroke();
+  }
+
   function renderStage() {
     els.stage.innerHTML = "";
+    ensureGridLayer();
+    drawGrid();
     state.hoveredIsland = null;
     state.hoveredPortal = null;
     renderIslands();
@@ -998,8 +1137,9 @@
       function pointerMove(moveEv) {
         const dx = (moveEv.clientX - startX) / state.zoom;
         const dy = (moveEv.clientY - startY) / state.zoom;
-        state.stageW = clamp(Math.round(startW + dx), 320, 4096);
-        state.stageH = clamp(Math.round(startH + dy), 320, 4096);
+        const clampedSize = clampStageDimensions(startW + dx, startH + dy);
+        state.stageW = clampedSize.w;
+        state.stageH = clampedSize.h;
         els.screenW.value = String(state.stageW);
         els.screenH.value = String(state.stageH);
         applyStageDimensions();
@@ -1171,19 +1311,22 @@
     el.addEventListener("pointerdown", pointerDown);
   }
 
-  async function loadDefaultJson() {
+  async function loadDefaultJson(pathOverride = null) {
+    const targetPath = pathOverride || getLayoutPathForPresetValue(els.preset.value);
     try {
-      const response = await fetch(DEFAULT_LAYOUT_PATH, { cache: "no-store" });
+      const response = await fetch(targetPath, { cache: "no-store" });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       els.jsonInput.value = await response.text();
-      loadFromText();
-      setStatus(`Loaded ${DEFAULT_LAYOUT_PATH}`, true);
+      if (!loadFromText(targetPath)) return false;
+      setStatus(`Loaded ${targetPath}`, true);
+      return true;
     } catch (e) {
-      setStatus(`Failed to fetch ${DEFAULT_LAYOUT_PATH}: ${e.message}`, false);
+      setStatus(`Failed to fetch ${targetPath}: ${e.message}`, false);
+      return false;
     }
   }
 
-  function loadFromText() {
+  function loadFromText(sourcePath = null) {
     try {
       const parsed = JSON.parse(els.jsonInput.value);
       if (!parsed || !Array.isArray(parsed.island_list)) {
@@ -1191,6 +1334,12 @@
       }
       state.raw = parsed;
       state.originalSnapshot = deepClone(layoutSnapshot());
+      const canonicalJson = JSON.stringify(state.raw, null, 2);
+      els.jsonInput.value = canonicalJson;
+      state.loadedJsonText = canonicalJson;
+      if (sourcePath) {
+        state.loadedLayoutPath = sourcePath;
+      }
       state.history = [];
       state.historyIndex = -1;
       renderStage();
@@ -1198,8 +1347,10 @@
       pushHistory();
       updateSandboxPadding();
       centerViewport();
+      return true;
     } catch (e) {
       setStatus(`Invalid JSON: ${e.message}`, false);
+      return false;
     }
   }
 
@@ -1222,15 +1373,17 @@
     }
     try {
       serializeJson();
+      const targetKey = getSaveTargetKey();
+      const repoPath = getRepoLayoutPathForTarget(targetKey);
       const confirmed = window.confirm(
-        "WARNING: This will OVERWRITE src/main/generated/assets/modernwarpmenu/layouts/layout.json.\n" +
+        `WARNING: This will OVERWRITE ${repoPath}.\n` +
         "Any existing contents will be permanently lost forever. Continue?"
       );
       if (!confirmed) {
         setStatus("Save cancelled.", true);
         return;
       }
-      const response = await fetch("/api/save-layout", {
+      const response = await fetch(`/api/save-layout?target=${encodeURIComponent(targetKey)}`, {
         method: "POST",
         headers: { "Content-Type": "application/json; charset=utf-8" },
         body: els.jsonInput.value
@@ -1238,7 +1391,7 @@
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
       }
-      setStatus("Saved to repo path: src/main/generated/assets/modernwarpmenu/layouts/layout.json", true);
+      setStatus(`Saved to repo path: ${repoPath}`, true);
     } catch (e) {
       setStatus(
         `Save failed: ${e.message}. Start tools/layout-editor-server.ps1 and open editor from that server.`,
@@ -1257,8 +1410,11 @@
   }
 
   function resizeStage() {
-    state.stageW = clamp(parseInt(els.screenW.value || "1920", 10), 320, 4096);
-    state.stageH = clamp(parseInt(els.screenH.value || "1080", 10), 320, 4096);
+    const requestedW = parseInt(els.screenW.value || "1920", 10);
+    const requestedH = parseInt(els.screenH.value || "1080", 10);
+    const clampedSize = clampStageDimensions(requestedW, requestedH);
+    state.stageW = clampedSize.w;
+    state.stageH = clampedSize.h;
     els.screenW.value = String(state.stageW);
     els.screenH.value = String(state.stageH);
     applyStageDimensions();
@@ -1271,11 +1427,39 @@
   }
 
   function applyPreset() {
-    const [w, h] = (els.preset.value || "1920x1080").split("x").map(v => parseInt(v, 10));
+    const selectedPreset = els.preset.value || "1920x1080";
+    const [w, h] = selectedPreset.split("x").map(v => parseInt(v, 10));
     if (!w || !h) return;
+    const targetLayoutPath = getLayoutPathForPresetValue(selectedPreset);
+    const currentLayoutPath = state.loadedLayoutPath || DEFAULT_LAYOUT_PATH;
+    const sourceWillChange = targetLayoutPath !== currentLayoutPath;
+    if (sourceWillChange) {
+      const fromLabel = getLayoutPathLabel(currentLayoutPath);
+      const toLabel = getLayoutPathLabel(targetLayoutPath);
+      const warnMessage = hasUnsavedChanges()
+        ? `This preset switches layout source:\n${fromLabel} -> ${toLabel}\n\nUnsaved changes in the current JSON will be lost.\n\nPress OK to discard and load the new layout, or Cancel to keep current.`
+        : `This preset switches layout source:\n${fromLabel} -> ${toLabel}\n\nPress OK to load the new layout, or Cancel to keep current.`;
+      if (!window.confirm(warnMessage)) {
+        els.preset.value = state.activePresetValue;
+        setStatus("Preset switch cancelled.", true);
+        return;
+      }
+      loadDefaultJson(targetLayoutPath).then(ok => {
+        if (!ok) {
+          els.preset.value = state.activePresetValue;
+          return;
+        }
+        els.screenW.value = String(w);
+        els.screenH.value = String(h);
+        resizeStage();
+        state.activePresetValue = selectedPreset;
+      });
+      return;
+    }
     els.screenW.value = String(w);
     els.screenH.value = String(h);
     resizeStage();
+    state.activePresetValue = selectedPreset;
   }
 
   els.btnLoadDefault.addEventListener("click", loadDefaultJson);
@@ -1346,6 +1530,23 @@
   });
 
   document.addEventListener("keydown", (ev) => {
+    const target = ev.target;
+    const isTypingTarget = target instanceof HTMLElement &&
+      (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.tagName === "SELECT" || target.isContentEditable);
+    if (!isTypingTarget && !ev.ctrlKey && !ev.metaKey && !ev.altKey) {
+      const key = ev.key.toLowerCase();
+      if (key === "p") {
+        ev.preventDefault();
+        setMode("preview");
+        return;
+      }
+      if (key === "e") {
+        ev.preventDefault();
+        setMode("editor");
+        return;
+      }
+    }
+
     if ((ev.ctrlKey || ev.metaKey) && !ev.shiftKey && ev.key.toLowerCase() === "z") {
       ev.preventDefault();
       undo();

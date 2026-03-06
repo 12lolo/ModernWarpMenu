@@ -46,7 +46,26 @@ while ($listener.IsListening) {
             $content = $reader.ReadToEnd()
             $reader.Dispose()
 
-            $target = Join-Path $root "src/main/generated/assets/modernwarpmenu/layouts/layout.json"
+            $targetKey = $req.QueryString["target"]
+            if ([string]::IsNullOrWhiteSpace($targetKey)) {
+                $targetKey = "default"
+            }
+
+            switch ($targetKey) {
+                "default" {
+                    $target = Join-Path $root "src/main/generated/assets/modernwarpmenu/layouts/layout.json"
+                }
+                "ultrawide" {
+                    $target = Join-Path $root "src/main/resources/resourcepacks/ultra_wide_layout/assets/modernwarpmenu/layouts/layout.json"
+                }
+                default {
+                    $res.StatusCode = 400
+                    $bytes = [System.Text.Encoding]::UTF8.GetBytes("Invalid save target")
+                    $res.OutputStream.Write($bytes, 0, $bytes.Length)
+                    continue
+                }
+            }
+
             Set-Content -Path $target -Value $content -Encoding UTF8
 
             $bytes = [System.Text.Encoding]::UTF8.GetBytes("{""ok"":true}")

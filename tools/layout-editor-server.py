@@ -25,7 +25,8 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def do_POST(self) -> None:  # noqa: N802
-        path = urlparse(self.path).path.lstrip("/")
+        parsed_url = urlparse(self.path)
+        path = parsed_url.path.lstrip("/")
         if path != "api/save-layout":
             self._write(404, b"Not Found")
             return
@@ -35,7 +36,22 @@ class Handler(BaseHTTPRequestHandler):
         try:
             text = payload.decode("utf-8")
             json.loads(text)
-            TARGET_JSON.write_text(text, encoding="utf-8")
+            target = "default"
+            if parsed_url.query:
+                for item in parsed_url.query.split("&"):
+                    if item.startswith("target="):
+                        target = item.split("=", 1)[1].strip().lower() or "default"
+                        break
+
+            if target == "ultrawide":
+                target_file = ROOT / "src" / "main" / "resources" / "resourcepacks" / "ultra_wide_layout" / "assets" / "modernwarpmenu" / "layouts" / "layout.json"
+            elif target == "default":
+                target_file = TARGET_JSON
+            else:
+                self._write(400, b'{"ok":false,"error":"Invalid save target"}', "application/json; charset=utf-8")
+                return
+
+            target_file.write_text(text, encoding="utf-8")
             self._write(200, b'{"ok":true}', "application/json; charset=utf-8")
         except Exception as exc:  # pragma: no cover
             msg = f'{{"ok":false,"error":"{str(exc).replace(chr(34), "")}"}}'.encode("utf-8")
