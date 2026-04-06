@@ -11,14 +11,14 @@ import com.github.yukkuritaku.modernwarpmenu.listeners.WarpMenuListener;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
+import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
+
 public class ModernWarpMenu implements ClientModInitializer {
 
 	public static final String MOD_ID = "modernwarpmenu";
@@ -38,10 +38,10 @@ public class ModernWarpMenu implements ClientModInitializer {
 	public void onInitializeClient() {
 		SettingsManager.init();
 		ModernWarpMenuCommand.registerCommands();
-		FabricLoader.getInstance().getModContainer(MOD_ID).ifPresent(modContainer -> ResourceManagerHelper.registerBuiltinResourcePack(Identifier.fromNamespaceAndPath(MOD_ID, "ultra_wide_layout"),
+		FabricLoader.getInstance().getModContainer(MOD_ID).ifPresent(modContainer -> ResourceLoader.registerBuiltinPack(Identifier.fromNamespaceAndPath(MOD_ID, "ultra_wide_layout"),
                 modContainer,
                 Component.literal("21:9 Ultra wide layout pack"),
-                ResourcePackActivationType.NORMAL));
+                PackActivationType.NORMAL));
 		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(Identifier.fromNamespaceAndPath(MOD_ID, "skyblock_constants"), this.skyBlockConstantsManager);
 		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(Identifier.fromNamespaceAndPath(MOD_ID, "layouts"), this.layoutManager);
 		new ChatListener().registerEvents();
