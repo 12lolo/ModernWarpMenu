@@ -109,7 +109,7 @@ public class LayoutProvider implements DataProvider {
                                         new Warp(5, 21, "Spawn", "deep"),
                                         new Warp(33, 12, "Dwarven\nMines", "dwarves"),
                                         new Warp(20, 5, "Forge", "forge"),
-                                        new Warp(7, 12, "Tunnels", "tunnels"),
+                                        new Warp(6, 12, "Base Camp", "basecamp"),
                                         new Warp(31, 26, "Hollows", "ch"),
                                         new Warp(18, 30, "Nucleus", "nucleus")
                                 )),
@@ -131,7 +131,8 @@ public class LayoutProvider implements DataProvider {
                                 "textures/gui/islands/mushroom_desert.png"), 827, 604),
                                 50, 2, 2, 0.15f,
                                 List.of(new Warp(14, 29, "Spawn", "desert"),
-                                        new Warp(12, 8, "Trapper", "trapper"))
+                                        new Warp(9, 8, "Trapper", "trapper"),
+                                        new Warp(18, 16, "Mushroom Cave", "glowing"))
                         ),
                         new Island("The Park", new LayoutTexture(Identifier.fromNamespaceAndPath(ModernWarpMenu.MOD_ID,
                                 "textures/gui/islands/park.png"), 1371, 1028),

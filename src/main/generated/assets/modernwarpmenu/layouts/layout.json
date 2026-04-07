@@ -263,9 +263,9 @@
           "grid_y": 5
         },
         {
-          "command_name": "tunnels",
-          "display_name": "Tunnels",
-          "grid_x": 7,
+          "command_name": "basecamp",
+          "display_name": "Base Camp",
+          "grid_x": 6,
           "grid_y": 12
         },
         {
@@ -383,8 +383,14 @@
         {
           "command_name": "trapper",
           "display_name": "Trapper",
-          "grid_x": 12,
+          "grid_x": 9,
           "grid_y": 8
+        },
+        {
+          "command_name": "glowing",
+          "display_name": "Mushroom Cave",
+          "grid_x": 18,
+          "grid_y": 16
         }
       ],
       "width_percentage": 0.15,
