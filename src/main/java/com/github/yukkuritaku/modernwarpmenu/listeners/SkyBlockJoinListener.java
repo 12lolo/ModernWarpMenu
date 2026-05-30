@@ -12,7 +12,7 @@ import net.azureaaron.hmapi.network.packet.s2c.ErrorS2CPacket;
 import net.azureaaron.hmapi.network.packet.s2c.HelloS2CPacket;
 import net.azureaaron.hmapi.network.packet.s2c.HypixelS2CPacket;
 import net.azureaaron.hmapi.network.packet.v1.s2c.LocationUpdateS2CPacket;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -123,7 +123,7 @@ public class SkyBlockJoinListener {
                 LOGGER.info("Disconnected from Hypixel. (ClientLoginConnectionEvents)");
             }
         });
-        ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register((client, level) -> {
+        ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register((client, level) -> {
 
             if (!SettingsManager.get().general.useHypixelAPI) {
                 this.lastWorldSwitchTime = Util.getMillis();

@@ -1,7 +1,7 @@
 package com.github.yukkuritaku.modernwarpmenu.client.gui.components;
 
 import com.github.yukkuritaku.modernwarpmenu.data.layout.texture.LayoutTexture;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 
@@ -48,5 +48,5 @@ public abstract class CustomContainerButton extends Button {
      * Disable the vanilla button rendering
      */
     @Override
-    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {}
+    protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {}
 }

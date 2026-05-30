@@ -3,7 +3,7 @@ package com.github.yukkuritaku.modernwarpmenu.data.layout;
 import com.github.yukkuritaku.modernwarpmenu.ModernWarpMenu;
 import com.github.yukkuritaku.modernwarpmenu.data.layout.texture.LayoutTexture;
 import com.mojang.serialization.JsonOps;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
@@ -24,7 +24,7 @@ public class LayoutProvider implements DataProvider {
     private final String modid;
     private final CompletableFuture<HolderLookup.Provider> lookupProvider;
 
-    public LayoutProvider(FabricDataOutput output, String modid, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+    public LayoutProvider(FabricPackOutput output, String modid, CompletableFuture<HolderLookup.Provider> lookupProvider) {
         this.pathProvider = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "layouts");
         this.modid = modid;
         this.lookupProvider = lookupProvider;

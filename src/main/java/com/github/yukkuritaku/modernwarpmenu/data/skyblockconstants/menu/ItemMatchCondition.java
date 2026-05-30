@@ -9,7 +9,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.StringUtil;
 import net.minecraft.world.Container;
@@ -89,7 +88,7 @@ public record ItemMatchCondition(int inventorySlot,
                 }
             }
             if (!StringUtil.isNullOrEmpty(this.itemId) || !this.itemIdList.isEmpty()) {
-                String stackItemId = stack.getItemHolder().getRegisteredName();
+                String stackItemId = stack.typeHolder().getRegisteredName();
                 minecraftItemIDMatches = stackItemId.equals(this.itemId)
                         || this.itemIdList.contains(stackItemId);
                 if (!minecraftItemIDMatches) {

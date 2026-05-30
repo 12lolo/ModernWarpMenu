@@ -6,7 +6,7 @@ import com.github.yukkuritaku.modernwarpmenu.data.layout.Layout;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
@@ -60,8 +60,8 @@ public abstract class CustomContainerScreen extends ContainerScreen {
         this.renderCustomUI = renderCustomUI;
         this.customUIInteractionEnabled = customUIInteractionEnabled;
     }
-    protected abstract void renderButtons(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick);
-    protected abstract void renderCustomUI(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick);
+    protected abstract void renderButtons(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick);
+    protected abstract void renderCustomUI(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick);
     protected abstract boolean customUIKeyPressed(KeyEvent event);
     protected abstract boolean customUIMouseClicked(MouseButtonEvent event, boolean isDoubleClick);
 
@@ -85,41 +85,30 @@ public abstract class CustomContainerScreen extends ContainerScreen {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         if (this.renderCustomUI) {
-            renderCustomUI(guiGraphics, mouseX, mouseY, partialTick);
+            renderCustomUI(graphics, mouseX, mouseY, a);
         }
         else
-            super.render(guiGraphics, mouseX, mouseY, partialTick);
+            super.extractRenderState(graphics, mouseX, mouseY, a);
     }
 
     @Override
-    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         if (this.renderCustomUI) {
-            this.renderBg(guiGraphics, partialTick, mouseX, mouseY);
-        }else {
-            super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-        }
-    }
-
-    @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-
-        if (this.renderCustomUI){
             if (this.backgroundTextureLocation != Layout.EMPTY){
                 //TODO Maybe texture resolution include?
-                renderMenuBackgroundTexture(guiGraphics, this.backgroundTextureLocation,
+                extractMenuBackgroundTexture(graphics, this.backgroundTextureLocation,
                         0, 0,
                         0.0f, 0.0f,
-                        guiGraphics.guiWidth(), guiGraphics.guiHeight());
+                        graphics.guiWidth(), graphics.guiHeight());
             }else {
-                this.renderTransparentBackground(guiGraphics);
+                this.extractTransparentBackground(graphics);
             }
         }else {
-            super.renderBg(guiGraphics, partialTick, mouseX, mouseY);
+            super.extractBackground(graphics, mouseX, mouseY, a);
         }
     }
-
 
     @Override
     public boolean keyPressed(KeyEvent event) {

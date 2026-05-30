@@ -10,7 +10,7 @@ import com.github.yukkuritaku.modernwarpmenu.listeners.SkyBlockJoinListener;
 import com.github.yukkuritaku.modernwarpmenu.listeners.WarpMenuListener;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
@@ -24,7 +24,7 @@ public class ModernWarpMenu implements ClientModInitializer {
 	public static final String MOD_ID = "modernwarpmenu";
 	private static ModernWarpMenu instance;
     private final KeyMapping.Category category = KeyMapping.Category.register(Identifier.fromNamespaceAndPath(MOD_ID, "modern_warp_menu"));
-	private final KeyMapping keyOpenWarpMenu = KeyBindingHelper.registerKeyBinding(new KeyMapping("modernwarpmenu.key.openWarpMenu",
+	private final KeyMapping keyOpenWarpMenu = KeyMappingHelper.registerKeyMapping(new KeyMapping("modernwarpmenu.key.openWarpMenu",
 			InputConstants.KEY_M, this.category));
 
 	private final SkyBlockConstantsManager skyBlockConstantsManager = new SkyBlockConstantsManager();
@@ -42,8 +42,8 @@ public class ModernWarpMenu implements ClientModInitializer {
                 modContainer,
                 Component.literal("21:9 Ultra wide layout pack"),
                 PackActivationType.NORMAL));
-		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(Identifier.fromNamespaceAndPath(MOD_ID, "skyblock_constants"), this.skyBlockConstantsManager);
-		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(Identifier.fromNamespaceAndPath(MOD_ID, "layouts"), this.layoutManager);
+		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(Identifier.fromNamespaceAndPath(MOD_ID, "skyblock_constants"), this.skyBlockConstantsManager);
+		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(Identifier.fromNamespaceAndPath(MOD_ID, "layouts"), this.layoutManager);
 		new ChatListener().registerEvents();
 		new SkyBlockJoinListener().registerEvents();
 		new WarpMenuListener().registerEvents();
