@@ -361,7 +361,7 @@
     },
     {
       "grid_x": 50,
-      "grid_y": 4,
+      "grid_y": 1,
       "hover_effect_texture": {
         "height": 604,
         "location": "modernwarpmenu:textures/gui/islands/mushroom_desert.png",
@@ -465,7 +465,7 @@
       "z_level": 0
     },
     {
-      "grid_x": 49,
+      "grid_x": 51,
       "grid_y": 19,
       "hover_effect_texture": {
         "height": 875,
@@ -490,18 +490,18 @@
       "z_level": 0
     },
     {
-      "grid_x": 53,
-      "grid_y": 10,
+      "grid_x": 54,
+      "grid_y": 9,
       "hover_effect_texture": {
-        "height": 1000,
+        "height": 1336,
         "location": "modernwarpmenu:textures/gui/islands/lotus.png",
-        "width": 1000
+        "width": 1280
       },
-      "name": "Lotus",
+      "name": "Lotus Atoll",
       "texture": {
-        "height": 1000,
+        "height": 1336,
         "location": "modernwarpmenu:textures/gui/islands/lotus.png",
-        "width": 1000
+        "width": 1280
       },
       "warp_list": [
         {
@@ -568,8 +568,8 @@
       "z_level": 2
     },
     {
-      "grid_x": 55,
-      "grid_y": 24,
+      "grid_x": 56,
+      "grid_y": 27,
       "hover_effect_texture": {
         "height": 268,
         "location": "modernwarpmenu:textures/gui/islands/rift_npc.png",
