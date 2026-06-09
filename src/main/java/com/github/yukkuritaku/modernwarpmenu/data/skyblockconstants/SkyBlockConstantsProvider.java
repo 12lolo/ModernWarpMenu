@@ -64,7 +64,7 @@ public class SkyBlockConstantsProvider implements DataProvider {
                                         "",
                                         List.of("Paper Icons", ""),
                                         "",
-                                        List.of("minecraft:map", "minecraft:filled_map"),
+                                        List.of("minecraft:map", "minecraft:filled_map", "minecraft:black_stained_glass_pane"),
                                         "", List.of(), ItemMatchCondition.EMPTY_PATTERN
                                 )
                         ),
