@@ -18,9 +18,8 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.logging.LogUtils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
-import net.minecraft.util.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.MultiLineTextWidget;
 import net.minecraft.client.gui.components.Renderable;
@@ -32,11 +31,12 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
-import net.minecraft.world.Container;
+import net.minecraft.util.Util;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
-import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.lwjgl.glfw.GLFW;
@@ -64,6 +64,7 @@ public class ModernWarpScreen extends CustomContainerScreen {
     public final Menu warpMenu;
     private Layout layout;
     private final SimpleContainer chestInventory;
+    private final ChestMenu menu;
     private ConfigButton configButton;
     private InventoryChangeListener inventoryListener;
 
@@ -89,6 +90,7 @@ public class ModernWarpScreen extends CustomContainerScreen {
         this.warpMenu = warpMenu;
         this.layout = layout;
         this.chestInventory = (SimpleContainer) ((ChestMenu) playerInventory.player.containerMenu).getContainer();
+        this.menu = menu;
         if (SettingsManager.get().general.warpMenuEnabled) {
             /*
             Render a blank custom UI before buttons are enabled to prevent the vanilla chest UI from displaying
@@ -97,7 +99,7 @@ public class ModernWarpScreen extends CustomContainerScreen {
             setCustomUIState(true, true);
             this.inventoryListener = new InventoryChangeListener(new ChestItemChangeCallback(this));
             LOGGER.info("<init> addListener");
-            this.chestInventory.addListener(this.inventoryListener);
+            this.menu.addSlotListener(this.inventoryListener);
         }
         this.originalTitle = Component.literal(warpMenu.getDisplayName());
     }
@@ -139,7 +141,7 @@ public class ModernWarpScreen extends CustomContainerScreen {
             } finally {
                 // schedule is required, because throw ConcurrentModificationException
                 assert this.minecraft != null : "Minecraft is null";
-                this.minecraft.schedule(() -> this.chestInventory.removeListener(this.inventoryListener));
+                this.minecraft.schedule(() -> this.menu.removeSlotListener(this.inventoryListener));
             }
         }
     }
@@ -150,17 +152,17 @@ public class ModernWarpScreen extends CustomContainerScreen {
      * @param mouseX mouse x coordinate
      * @param mouseY mouse y coordinate
      */
-    public void drawExceptionScreen(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+    public void drawExceptionScreen(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+        extractBackground(graphics, mouseX, mouseY, partialTick);
         // Labels are under the background for some reason
-        guiGraphics.pose().pushMatrix();
-        guiGraphics.pose().translate(0, 0);
+        graphics.pose().pushMatrix();
+        graphics.pose().translate(0, 0);
         for (Renderable renderable : ((ScreenAccessor) this).getRenderables()) {
-            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+            renderable.extractRenderState(graphics, mouseX, mouseY, partialTick);
         }
-        guiGraphics.pose().popMatrix();
+        graphics.pose().popMatrix();
         for (GuiEventListener listener : this.children()) {
-            ((Button) listener).render(guiGraphics, mouseX, mouseY, partialTick);
+            ((Button) listener).extractRenderState(graphics, mouseX, mouseY, partialTick);
         }
     }
 
@@ -216,7 +218,7 @@ public class ModernWarpScreen extends CustomContainerScreen {
                 if (this.menu.getCarried().isEmpty()) {
                     // Left click no shift
                     slotClicked(this.menu.slots.get(slotIndex), slotIndex,
-                            InputConstants.MOUSE_BUTTON_LEFT, ClickType.PICKUP);
+                            InputConstants.MOUSE_BUTTON_LEFT, ContainerInput.PICKUP);
                 } else {
                     onWarpFail(ModernWarpMenu.getFullLanguageKey("errors.mouseIsHoldingItem"));
                 }
@@ -228,7 +230,7 @@ public class ModernWarpScreen extends CustomContainerScreen {
         }
     }
 
-    private void renderDebugStrings(GuiGraphics guiGraphics,
+    private void renderDebugStrings(GuiGraphicsExtractor graphics,
                                     List<Component> debugStrings,
                                     int drawX, int drawY,
                                     int nearestGridX, int nearestGridY,
@@ -242,8 +244,8 @@ public class ModernWarpScreen extends CustomContainerScreen {
         List<ClientTooltipComponent> tooltipComponents = debugStrings.stream()
                 .map(c -> ClientTooltipComponent.create(c.getVisualOrderText()))
                 .toList();
-        guiGraphics.nextStratum();
-        guiGraphics.renderTooltip(
+        graphics.nextStratum();
+        graphics.tooltip(
                 Minecraft.getInstance().font,
                 tooltipComponents,
                 drawX,
@@ -251,7 +253,7 @@ public class ModernWarpScreen extends CustomContainerScreen {
                 DefaultTooltipPositioner.INSTANCE,
                 null
         );
-        guiGraphics.fill(drawX - 2, drawY - 2, drawX + 2, drawY + 2, Color.RED.getRGB());
+        graphics.fill(drawX - 2, drawY - 2, drawX + 2, drawY + 2, Color.RED.getRGB());
     }
 
     @Override
@@ -294,7 +296,7 @@ public class ModernWarpScreen extends CustomContainerScreen {
                             "modernwarpmenu.errors.modernWarpScreen.chestInventoryTooSmall", this.chestInventory.getContainerSize(), lastSlotIndexToCheck)
                     .withStyle(ChatFormatting.RED));
             setCustomUIState(false, false);
-            this.chestInventory.removeListener(this.inventoryListener);
+            this.menu.removeSlotListener(this.inventoryListener);
             return;
         }
         if (SettingsManager.get().general.showRegularWarpMenuButton) {
@@ -316,7 +318,7 @@ public class ModernWarpScreen extends CustomContainerScreen {
         } catch (RuntimeException e) {
             this.guiInitException = e;
             this.clearWidgets();
-            this.chestInventory.removeListener(this.inventoryListener);
+            this.menu.removeSlotListener(this.inventoryListener);
             int lineCount = 2;
             int labelX = 0;
             int labelY = this.height / 5;
@@ -407,17 +409,18 @@ public class ModernWarpScreen extends CustomContainerScreen {
         }
     }
 
+
     @Override
-    protected void renderButtons(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderButtons(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         for (Renderable renderable : ((ScreenAccessor) this).getRenderables()) {
             if (renderable instanceof ConfigButton || SettingsManager.get().general.warpMenuEnabled) {
-                renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+                renderable.extractRenderState(graphics, mouseX, mouseY, partialTick);
             }
         }
     }
 
     @Override
-    protected void renderCustomUI(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void renderCustomUI(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
 
         // Don't show ChestValue Button on warp menu, old way is used mixin to remove this button,
         // but it's really buggy, so this is way better to compatibility
@@ -437,7 +440,7 @@ public class ModernWarpScreen extends CustomContainerScreen {
         }
 
         if (guiInitException != null) {
-            drawExceptionScreen(guiGraphics, mouseX, mouseY, partialTick);
+            drawExceptionScreen(graphics, mouseX, mouseY, partialTick);
         }
         /*
         Patcher inventory scale doesn't reset inventory scale until the first draw of the screen after
@@ -465,16 +468,16 @@ public class ModernWarpScreen extends CustomContainerScreen {
             hoveredButtons.get(i).setHovered(false);
         }
         //TODO search stratum is needed or not
-        guiGraphics.nextStratum();
-        renderButtons(guiGraphics, mouseX, mouseY, partialTick);
+        graphics.nextStratum();
+        renderButtons(graphics, mouseX, mouseY, partialTick);
         // Draw warp fail tooltip
         if (Util.getMillis() <= warpFailTooltipExpiryTime && warpFailMessage != null) {
             List<ClientTooltipComponent> tooltipComponents = List.of(
                     ClientTooltipComponent.create(warpFailMessage.getVisualOrderText())
             );
             //TODO search stratum is needed or not
-            guiGraphics.nextStratum();
-            guiGraphics.renderTooltip(
+            graphics.nextStratum();
+            graphics.tooltip(
                     Minecraft.getInstance().font,
                     tooltipComponents,
                     mouseX,
@@ -491,10 +494,10 @@ public class ModernWarpScreen extends CustomContainerScreen {
             int nearestX;
             int nearestY;
             boolean tooltipDrawn = false;
-            guiGraphics.pose().pushMatrix();
-            guiGraphics.pose().translate(0, 0);
+            graphics.pose().pushMatrix();
+            graphics.pose().translate(0, 0);
             // Draw screen resolution
-            guiGraphics.drawCenteredString(Minecraft.getInstance().font,
+            graphics.centeredText(Minecraft.getInstance().font,
                     String.format("%d x %d (%d)",
                             this.window.getGuiScaledWidth(), this.window.getGuiScaledHeight(),
                             this.window.calculateScale(Minecraft.getInstance().options.guiScale().get(),
@@ -504,7 +507,7 @@ public class ModernWarpScreen extends CustomContainerScreen {
             FabricLoader.getInstance().getModContainer(ModernWarpMenu.MOD_ID).ifPresent(modContainer -> {
                 String name = modContainer.getMetadata().getName();
                 String version = modContainer.getMetadata().getVersion().getFriendlyString();
-                guiGraphics.drawCenteredString(Minecraft.getInstance().font, name + " " + version, this.width / 2, this.height - 10, ARGB.color(255, 14737632));
+                graphics.centeredText(Minecraft.getInstance().font, name + " " + version, this.width / 2, this.height - 10, ARGB.color(255, 14737632));
             });
             // Shift to draw island grid instead of warp grid
             if (!hasShiftDown()) {
@@ -516,7 +519,7 @@ public class ModernWarpScreen extends CustomContainerScreen {
                         nearestY = islandBtn.scaledGrid.findNearestGridY(mouseY);
                         drawX = (int) islandBtn.scaledGrid.getActualX(nearestX);
                         drawY = (int) islandBtn.scaledGrid.getActualY(nearestY);
-                        renderDebugStrings(guiGraphics, debugMessages, drawX, drawY, nearestX, nearestY, islandBtn.getZLevel());
+                        renderDebugStrings(graphics, debugMessages, drawX, drawY, nearestX, nearestY, islandBtn.getZLevel());
                         tooltipDrawn = true;
                         break;
                     }
@@ -528,16 +531,16 @@ public class ModernWarpScreen extends CustomContainerScreen {
                 nearestY = this.grid.findNearestGridY(mouseY);
                 drawX = (int) this.grid.getActualX(nearestX);
                 drawY = (int) this.grid.getActualY(nearestY);
-                renderDebugStrings(guiGraphics, debugMessages, drawX, drawY, nearestX, nearestY, -1);
+                renderDebugStrings(graphics, debugMessages, drawX, drawY, nearestX, nearestY, -1);
             }
-            guiGraphics.pose().popMatrix();
+            graphics.pose().popMatrix();
         }
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(this.font, this.originalTitle, this.titleLabelX, this.titleLabelY, -12566464, false);
-        guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, -12566464, false);
+    protected void extractLabels(GuiGraphicsExtractor graphics, int xm, int ym) {
+        graphics.centeredText(this.font, this.originalTitle, this.titleLabelX, this.titleLabelY, -12566464);
+        graphics.centeredText(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, -12566464);
     }
 
     @Override
@@ -605,7 +608,7 @@ public class ModernWarpScreen extends CustomContainerScreen {
     /**
      * A callback called when any item in the chest it is attached to changes
      */
-    private static class ChestItemChangeCallback implements Consumer<Container> {
+    private static class ChestItemChangeCallback implements Consumer<AbstractContainerMenu> {
         private final ModernWarpScreen modernWarpScreen;
         private int triggerCount;
 
@@ -615,7 +618,7 @@ public class ModernWarpScreen extends CustomContainerScreen {
         }
 
         @Override
-        public void accept(Container chestInventory) {
+        public void accept(AbstractContainerMenu chestInventory) {
             this.triggerCount++;
             this.modernWarpScreen.onChestItemChange(this.triggerCount);
         }

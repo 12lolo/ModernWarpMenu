@@ -263,9 +263,9 @@
           "grid_y": 5
         },
         {
-          "command_name": "tunnels",
-          "display_name": "Tunnels",
-          "grid_x": 7,
+          "command_name": "basecamp",
+          "display_name": "Base Camp",
+          "grid_x": 6,
           "grid_y": 12
         },
         {
@@ -383,8 +383,14 @@
         {
           "command_name": "trapper",
           "display_name": "Trapper",
-          "grid_x": 12,
+          "grid_x": 9,
           "grid_y": 8
+        },
+        {
+          "command_name": "glowing",
+          "display_name": "Mushroom Cave",
+          "grid_x": 18,
+          "grid_y": 16
         }
       ],
       "width_percentage": 0.15,
@@ -459,8 +465,8 @@
       "z_level": 0
     },
     {
-      "grid_x": 52,
-      "grid_y": 15,
+      "grid_x": 49,
+      "grid_y": 19,
       "hover_effect_texture": {
         "height": 875,
         "location": "modernwarpmenu:textures/gui/islands/bayou.png",
@@ -481,6 +487,31 @@
         }
       ],
       "width_percentage": 0.1,
+      "z_level": 0
+    },
+    {
+      "grid_x": 53,
+      "grid_y": 10,
+      "hover_effect_texture": {
+        "height": 1000,
+        "location": "modernwarpmenu:textures/gui/islands/lotus.png",
+        "width": 1000
+      },
+      "name": "Lotus",
+      "texture": {
+        "height": 1000,
+        "location": "modernwarpmenu:textures/gui/islands/lotus.png",
+        "width": 1000
+      },
+      "warp_list": [
+        {
+          "command_name": "lotus",
+          "display_name": "Spawn",
+          "grid_x": 7,
+          "grid_y": 33
+        }
+      ],
+      "width_percentage": 0.13,
       "z_level": 0
     },
     {

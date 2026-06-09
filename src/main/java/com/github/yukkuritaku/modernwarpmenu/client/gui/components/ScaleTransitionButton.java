@@ -7,7 +7,7 @@ import com.github.yukkuritaku.modernwarpmenu.data.layout.texture.LayoutTexture;
 import com.github.yukkuritaku.modernwarpmenu.data.settings.SettingsManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ComponentPath;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -69,14 +69,14 @@ public class ScaleTransitionButton extends CustomContainerButton{
      *
      * @param color color of the border
      */
-    public void renderBorder(GuiGraphics guiGraphics, int color) {
-        Matrix3x2fStack stack = guiGraphics.pose();
+    public void renderBorder(GuiGraphicsExtractor graphics, int color) {
+        Matrix3x2fStack stack = graphics.pose();
         stack.pushMatrix();
         stack.translate(0, 0); // z is ignored in 2D
-        guiGraphics.hLine((int) this.scaledXPosition, (int) (this.scaledXPosition + this.scaledWidth), (int) this.scaledYPosition, color);
-        guiGraphics.vLine((int) this.scaledXPosition, (int) this.scaledYPosition, (int) (this.scaledYPosition + this.scaledHeight), color);
-        guiGraphics.hLine((int) this.scaledXPosition, (int) (this.scaledXPosition + this.scaledWidth), (int) (this.scaledYPosition + this.scaledHeight), color);
-        guiGraphics.vLine((int) (this.scaledXPosition + this.scaledWidth), (int) this.scaledYPosition, (int) (this.scaledYPosition + this.scaledHeight), color);
+        graphics.horizontalLine((int) this.scaledXPosition, (int) (this.scaledXPosition + this.scaledWidth), (int) this.scaledYPosition, color);
+        graphics.verticalLine((int) this.scaledXPosition, (int) this.scaledYPosition, (int) (this.scaledYPosition + this.scaledHeight), color);
+        graphics.horizontalLine((int) this.scaledXPosition, (int) (this.scaledXPosition + this.scaledWidth), (int) (this.scaledYPosition + this.scaledHeight), color);
+        graphics.verticalLine((int) (this.scaledXPosition + this.scaledWidth), (int) this.scaledYPosition, (int) (this.scaledYPosition + this.scaledHeight), color);
         stack.popMatrix();
     }
     /**
@@ -84,7 +84,7 @@ public class ScaleTransitionButton extends CustomContainerButton{
      *
      * @param texture location of texture to draw
      */
-    protected void renderButtonTexture(GuiGraphics guiGraphics, Identifier texture) {
+    protected void renderButtonTexture(GuiGraphicsExtractor guiGraphics, Identifier texture) {
         int color;
         if (this.isHoveredOrFocused()) {
             color = new Color(HOVERED_BRIGHTNESS, HOVERED_BRIGHTNESS, HOVERED_BRIGHTNESS, 1f).getRGB();
@@ -116,10 +116,10 @@ public class ScaleTransitionButton extends CustomContainerButton{
      * @param xOffset x-offset from button left
      * @param yOffset y-offset from button top
      */
-    public void renderMessageString(GuiGraphics guiGraphics, float xOffset, float yOffset, Color textColor) {
+    public void renderMessageString(GuiGraphicsExtractor graphics, float xOffset, float yOffset, Color textColor) {
 
         String[] lines = this.getMessage().getString().split("\n");
-        Matrix3x2fStack stack = guiGraphics.pose();
+        Matrix3x2fStack stack = graphics.pose();
         Color color;
         if (this.isHoveredOrFocused()){
             color = new Color((int) (textColor.getRed() * HOVERED_BRIGHTNESS),
@@ -135,21 +135,21 @@ public class ScaleTransitionButton extends CustomContainerButton{
         stack.translate(this.scaledXPosition + xOffset, this.scaledYPosition + yOffset);
         stack.scale(this.transition.getCurrentScale(), this.transition.getCurrentScale());
         for (int i = 0; i < lines.length; i++) {
-            guiGraphics.drawCenteredString(Minecraft.getInstance().font, lines[i], 0, Minecraft.getInstance().font.lineHeight * i, color.getRGB());
+            graphics.centeredText(Minecraft.getInstance().font, lines[i], 0, Minecraft.getInstance().font.lineHeight * i, color.getRGB());
         }
         stack.popMatrix();
     }
 
-    protected void renderForegroundLayer(GuiGraphics guiGraphics, Identifier foregroundTexture){
+    protected void renderForegroundLayer(GuiGraphicsExtractor guiGraphics, Identifier foregroundTexture){
         if (foregroundTexture != null)
             renderButtonTexture(guiGraphics, foregroundTexture);
     }
 
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (this.visible) {
-            this.renderContents(guiGraphics, mouseX, mouseY, partialTick);
+            this.extractContents(guiGraphics, mouseX, mouseY, partialTick);
             this.tooltip.refreshTooltipForNextRenderPass(
                     guiGraphics,
                     mouseX,
@@ -162,16 +162,16 @@ public class ScaleTransitionButton extends CustomContainerButton{
     }
 
     @Override
-    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         if (this.visible){
             this.buttonRectangle.scale(this.transition.getCurrentScale());
             this.scaledXPosition = this.buttonRectangle.getXPosition();
             this.scaledYPosition = this.buttonRectangle.getYPosition();
             this.scaledWidth = this.buttonRectangle.getWidth();
             this.scaledHeight = this.buttonRectangle.getHeight();
-            renderButtonTexture(guiGraphics, this.backgroundTexture.location());
+            renderButtonTexture(graphics, this.backgroundTexture.location());
             if (SettingsManager.get().debug.debugModeEnabled && SettingsManager.get().debug.drawBorders) {
-                renderBorder(guiGraphics, ARGB.white(1.0f));
+                renderBorder(graphics, ARGB.white(1.0f));
             }
         }
     }

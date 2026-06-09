@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version "${loom_version}"
+	id 'net.fabricmc.fabric-loom' version "${loom_version}"
 	id 'maven-publish'
 }
 
@@ -11,7 +11,7 @@ base {
 }
 
 loom {
-	accessWidenerPath = file("src/main/resources/modernwarpmenu.accesswidener")
+	accessWidenerPath = file("src/main/resources/modernwarpmenu.classtweaker")
 }
 
 fabricApi {
@@ -39,6 +39,15 @@ repositories {
 			includeGroup "maven.modrinth"
 		}
 	}
+	exclusiveContent {
+		forRepository {
+			maven { url "https://maven.azureaaron.net/releases" }
+		}
+
+		filter {
+			includeGroup "net.azureaaron"
+		}
+	}
 
 	maven {
 		name = "Xander Maven"
@@ -58,42 +67,40 @@ repositories {
 	maven { url 'https://maven.fallenbreath.me/releases' }
 
 	maven { url 'https://repo.hypixel.net/repository/Hypixel/' }
-	maven { url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1" }
+	maven { url "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1" }
 }
 
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings loom.layered(){
-		officialMojangMappings()
-		parchment("org.parchmentmc.data:parchment-1.21.10:2025.10.12@zip")
-	}
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modApi "dev.architectury:architectury-fabric:${project.architectury_version}"
-	modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
-	modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
-	modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}"
-	modCompileOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
-	modCompileOnly "maven.modrinth:skyblocker-liap:${project.skyblocker_version}"
-	include(modImplementation("me.fallenbreath:conditional-mixin-fabric:${project.conditional_mixin_version}"))
-	include(modImplementation("net.hypixel:mod-api:${project.hypixel_mod_api_version}"))
-	modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:1.2.2")
+	//api "dev.architectury:architectury-fabric:${project.architectury_version}"
+	implementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
+	implementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+	compileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}"
+	compileOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
+	compileOnly "maven.modrinth:skyblocker-liap:${project.skyblocker_version}"
+	include(implementation("me.fallenbreath:conditional-mixin-fabric:${project.conditional_mixin_version}"))
+	//include(implementation("net.hypixel:mod-api:${project.hypixel_mod_api_version}"))
+	include(implementation("net.azureaaron:hm-api:${project.hm_api_version}"))
+	//runtimeOnly "me.djtheredstoner:DevAuth-fabric:1.2.2"
 }
 
 processResources {
-	inputs.property "version", project.version
+	def version = project.version
+	inputs.property "version", version
 
 	filesMatching("fabric.mod.json") {
-		expand "version": project.version
+		expand "version": version
 	}
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 21
+	it.options.release = 25
 }
 
 java {
@@ -102,13 +109,16 @@ java {
 	// If you remove this line, sources will not be generated.
 	withSourcesJar()
 
-	sourceCompatibility = JavaVersion.VERSION_21
-	targetCompatibility = JavaVersion.VERSION_21
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
 }
 
 jar {
+	def projectName = project.name
+	inputs.property "projectName", projectName
+
 	from("LICENSE") {
-		rename { "${it}_${project.base.archivesName.get()}"}
+		rename { "${it}_$projectName"}
 	}
 }
 

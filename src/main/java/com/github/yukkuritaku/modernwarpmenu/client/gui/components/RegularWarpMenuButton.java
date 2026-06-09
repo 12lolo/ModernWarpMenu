@@ -8,7 +8,7 @@ import com.github.yukkuritaku.modernwarpmenu.data.layout.Layout;
 import com.mojang.blaze3d.platform.Window;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 
@@ -65,9 +65,9 @@ public class RegularWarpMenuButton extends ScaleTransitionButton{
     }
 
     @Override
-    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         calculateHoverState(mouseX, mouseY);
         transitionStep(SCALE_TRANSITION_DURATION, HOVERED_SCALE);
-        super.renderContents(guiGraphics, mouseX, mouseY, partialTick);
+        super.extractContents(graphics, mouseX, mouseY, partialTick);
     }
 }

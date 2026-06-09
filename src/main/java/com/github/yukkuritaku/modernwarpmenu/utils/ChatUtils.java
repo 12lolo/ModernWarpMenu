@@ -54,7 +54,7 @@ public class ChatUtils {
         MutableComponent prefixComponent = createModNamePrefixComponent();
         prefixComponent.append(message);
         if (Minecraft.getInstance().player != null) {
-            Minecraft.getInstance().player.displayClientMessage(prefixComponent, false);
+            Minecraft.getInstance().player.sendSystemMessage(prefixComponent);
         }
     }
 
@@ -105,6 +105,6 @@ public class ChatUtils {
                 .append(Component.translatable(COPY_TO_CLIPBOARD_TRANSLATION_KEY).withStyle(copyThrowableStyle))
                 .append(Component.literal("]").withStyle(plainStyle));
         if (Minecraft.getInstance().player != null)
-            Minecraft.getInstance().player.displayClientMessage(component, false);
+            Minecraft.getInstance().player.sendSystemMessage(component);
     }
 }

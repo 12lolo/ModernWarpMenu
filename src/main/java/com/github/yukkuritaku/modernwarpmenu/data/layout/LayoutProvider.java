@@ -3,7 +3,7 @@ package com.github.yukkuritaku.modernwarpmenu.data.layout;
 import com.github.yukkuritaku.modernwarpmenu.ModernWarpMenu;
 import com.github.yukkuritaku.modernwarpmenu.data.layout.texture.LayoutTexture;
 import com.mojang.serialization.JsonOps;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
@@ -24,7 +24,7 @@ public class LayoutProvider implements DataProvider {
     private final String modid;
     private final CompletableFuture<HolderLookup.Provider> lookupProvider;
 
-    public LayoutProvider(FabricDataOutput output, String modid, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+    public LayoutProvider(FabricPackOutput output, String modid, CompletableFuture<HolderLookup.Provider> lookupProvider) {
         this.pathProvider = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "layouts");
         this.modid = modid;
         this.lookupProvider = lookupProvider;
@@ -109,18 +109,18 @@ public class LayoutProvider implements DataProvider {
                                         new Warp(5, 21, "Spawn", "deep"),
                                         new Warp(33, 12, "Dwarven\nMines", "dwarves"),
                                         new Warp(20, 5, "Forge", "forge"),
-                                        new Warp(7, 12, "Tunnels", "tunnels"),
+                                        new Warp(6, 12, "Base Camp", "basecamp"),
                                         new Warp(31, 26, "Hollows", "ch"),
                                         new Warp(18, 30, "Nucleus", "nucleus")
                                 )),
                         new Island("Home", new LayoutTexture(Identifier.fromNamespaceAndPath(ModernWarpMenu.MOD_ID,
                                 "textures/gui/islands/private_island.png"), 414, 488),
-                                38, 30, 1, 0.05f,
+                                39, 30, 1, 0.05f,
                                 List.of(new Warp(3, 3, "Spawn", "home"))
                         ),
                         new Island("Garden", new LayoutTexture(Identifier.fromNamespaceAndPath(ModernWarpMenu.MOD_ID,
                                 "textures/gui/islands/garden.png"), 941, 569),
-                                43, 24, 2, 0.1f,
+                                43, 25, 2, 0.1f,
                                 List.of(new Warp(10, 8, "Spawn", "garden"))),
                         new Island("The Barn", new LayoutTexture(Identifier.fromNamespaceAndPath(ModernWarpMenu.MOD_ID,
                                 "textures/gui/islands/barn.png"), 1080, 1080),
@@ -131,7 +131,8 @@ public class LayoutProvider implements DataProvider {
                                 "textures/gui/islands/mushroom_desert.png"), 827, 604),
                                 50, 4, 2, 0.15f,
                                 List.of(new Warp(14, 29, "Spawn", "desert"),
-                                        new Warp(12, 8, "Trapper", "trapper"))
+                                        new Warp(9, 8, "Trapper", "trapper"),
+                                        new Warp(18, 16, "Mushroom Cave", "glowing"))
                         ),
                         new Island("The Park", new LayoutTexture(Identifier.fromNamespaceAndPath(ModernWarpMenu.MOD_ID,
                                 "textures/gui/islands/park.png"), 1371, 1028),
@@ -146,8 +147,12 @@ public class LayoutProvider implements DataProvider {
                                         new Warp(22, 15, "Murkwater", "murkwater"))),
                         new Island("Bayou", new LayoutTexture(Identifier.fromNamespaceAndPath(ModernWarpMenu.MOD_ID,
                                 "textures/gui/islands/bayou.png"), 951, 875),
-                                52, 15, 0, 0.1f,
+                                49, 19, 0, 0.1f,
                                 List.of(new Warp(5, 3, "Spawn", "bayou"))),
+                        new Island("Lotus", new LayoutTexture(Identifier.fromNamespaceAndPath(ModernWarpMenu.MOD_ID,
+                                "textures/gui/islands/lotus.png"), 1000, 1000),
+                                53, 10, 0, 0.13f,
+                                List.of(new Warp(7, 33, "Spawn", "lotus"))),
                         new Island("Jerry's Workshop", new LayoutTexture(Identifier.fromNamespaceAndPath(ModernWarpMenu.MOD_ID,
                                 "textures/gui/islands/jerrys_workshop.png"), 890, 602),
                                 2, 28, 2, 0.15f,
@@ -155,12 +160,12 @@ public class LayoutProvider implements DataProvider {
                                         List.of("jerry")))),
                         new Island("Dungeon Hub", new LayoutTexture(Identifier.fromNamespaceAndPath(ModernWarpMenu.MOD_ID,
                                 "textures/gui/islands/dungeon_hub.png"), 256, 512),
-                                47, 31, 2, 0.03f,
+                                51, 29, 2, 0.03f,
                                 List.of(new Warp(6, 15, "Spawn", "dungeons"))
                         ),
                         new Island("Rift NPC", new LayoutTexture(Identifier.fromNamespaceAndPath(ModernWarpMenu.MOD_ID,
                                 "textures/gui/islands/rift_npc.png"), 122, 268),
-                                53, 27, 2, 0.03f,
+                                55, 24, 2, 0.03f,
                                 List.of(new Warp(6, 15, "Rift", "rift"))
                         )
 

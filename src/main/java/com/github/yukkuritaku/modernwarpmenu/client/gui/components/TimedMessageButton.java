@@ -1,9 +1,9 @@
 package com.github.yukkuritaku.modernwarpmenu.client.gui.components;
 
-import net.minecraft.util.Util;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Util;
 
 
 public class TimedMessageButton extends Button {
@@ -29,7 +29,7 @@ public class TimedMessageButton extends Button {
     }
 
     @Override
-    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         this.checkTimedMessage();
     }
 
