@@ -17,7 +17,10 @@
           "minecraft:map",
           "minecraft:filled_map"
         ],
-        "item_name": "Paper Icons"
+        "item_name_list": [
+          "Paper Icons",
+          ""
+        ]
       }
     ],
     "porhtal": [
